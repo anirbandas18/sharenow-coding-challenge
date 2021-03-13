@@ -1,0 +1,17 @@
+#spring:
+#  application:
+#    name: configuration-service
+#  profiles:
+#    active: native
+#  cloud:
+#    config:
+#     server:
+#        native:
+#          search-locations: classpath:/configuration-store
+#        bootstrap: true
+#        encrypt:
+#          enabled: true
+#server:
+#  port: 8888
+#encrypt:
+#  key: $#@R5n0\/\/
