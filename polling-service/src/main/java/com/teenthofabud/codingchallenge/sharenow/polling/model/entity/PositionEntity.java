@@ -1,4 +1,4 @@
-package com.teenthofabud.codingchallenge.sharenow.polling.refresh.model.entity;
+package com.teenthofabud.codingchallenge.sharenow.polling.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;

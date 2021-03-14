@@ -1,7 +1,9 @@
 package com.teenthofabud.codingchallenge.sharenow.polling.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.teenthofabud.codingchallenge.sharenow.polling.refresh.model.dto.ErrorDTO;
+import com.teenthofabud.codingchallenge.sharenow.polling.exception.PollingErrorCode;
+import com.teenthofabud.codingchallenge.sharenow.polling.exception.PollingServiceException;
+import com.teenthofabud.codingchallenge.sharenow.polling.model.dto.ErrorDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,7 @@ public class RestClientErrorHandler implements ResponseErrorHandler {
                 .series() == HttpStatus.Series.SERVER_ERROR) {
             ErrorDTO err = om.readValue(clientHttpResponse.getBody(), ErrorDTO.class);
             LOGGER.error("Unexpected server error: [{}={}]", clientHttpResponse.getRawStatusCode(), err.toString());
+            throw new PollingServiceException(err.toString(), PollingErrorCode.REST_ERROR);
         } else if (clientHttpResponse.getStatusCode()
                 .series() == HttpStatus.Series.CLIENT_ERROR) {
             ErrorDTO err = om.readValue(clientHttpResponse.getBody(), ErrorDTO.class);
@@ -44,6 +47,7 @@ public class RestClientErrorHandler implements ResponseErrorHandler {
             } else {
                 LOGGER.error("Unexpected client error: [{}={}]", clientHttpResponse.getRawStatusCode(), err.toString());
             }
+            throw new PollingServiceException(err.toString(), PollingErrorCode.REST_ERROR);
         }
     }
 }

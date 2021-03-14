@@ -1,4 +1,4 @@
-package com.teenthofabud.codingchallenge.sharenow.polling.refresh.model.dto;
+package com.teenthofabud.codingchallenge.sharenow.polling.model.dto;
 
 
 import lombok.Getter;

@@ -1,10 +1,12 @@
-package com.teenthofabud.codingchallenge.sharenow.polling.refresh.model.entity;
+package com.teenthofabud.codingchallenge.sharenow.polling.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,11 +15,13 @@ import java.util.Date;
 @Setter
 @ToString
 @RedisHash("Vehicle")
+@TypeAlias("Vehicle")
 public class VehicleEntity implements Serializable {
 
     @Id
     private int id;
     private int locationId;
+    @Indexed
     private String vin;
     private String numberPlate;
     private PositionEntity position;
