@@ -18,7 +18,7 @@
 
     <modules>
         <module>polygon-service</module>
-        <module>vehicle-service</module>
+        <module>car-service</module>
         <module>position-service</module>
         <module>naming-service</module>
         <module>gateway-service</module>
