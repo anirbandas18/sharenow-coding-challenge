@@ -15,14 +15,15 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-@RedisHash("Vehicle")
-@TypeAlias("Vehicle")
+@RedisHash("Car")
+@TypeAlias("Car")
 @NoArgsConstructor
 public class CarEntity implements Serializable {
 
-    @Id
+    @Indexed
     private int id;
     private int locationId;
+    @Id
     @Indexed
     private String vin;
     private String numberPlate;
@@ -32,7 +33,7 @@ public class CarEntity implements Serializable {
     private Date updatedAt;
 
     public String getCacheKey() {
-        return "Vehicle:" + id;
+        return "Car:" + vin;
     }
 
     public CarEntity(String vin) {

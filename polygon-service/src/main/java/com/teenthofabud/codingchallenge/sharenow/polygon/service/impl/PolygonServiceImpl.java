@@ -6,6 +6,8 @@ import com.teenthofabud.codingchallenge.sharenow.polygon.model.entity.GeoFeature
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.entity.OptionsEntity;
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.entity.StrategicPolygonEntity;
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.entity.TimedOptionsEntity;
+import com.teenthofabud.codingchallenge.sharenow.polygon.model.error.PolygonErrorCode;
+import com.teenthofabud.codingchallenge.sharenow.polygon.model.error.PolygonServiceException;
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.vo.ActiveTimedOptionsVO;
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.vo.ComputedVO;
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.vo.GeoFeatureVO;
@@ -20,9 +22,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -57,7 +62,7 @@ public class PolygonServiceImpl implements PolygonService {
         this.computedConverter = computedConverter(this.activeTimedOptionsConverter);
         this.strategicPolygonComplexConverter = strategicPolygonComplexConverter(this.computedConverter, this.geoFeatureConverter,
                 this.optionsConverter, this.timedOptionsConverter);
-        this.strategicPolygonSimpleConverter = strategicPolygonSimpleConverter();
+        this.strategicPolygonSimpleConverter = strategicPolygonSimpleConverter(this.geoFeatureConverter);
     }
 
     private Converter<ActiveTimedOptionsEntity, ActiveTimedOptionsVO> activeTimedOptionsConverter() {
@@ -147,7 +152,7 @@ public class PolygonServiceImpl implements PolygonService {
         };
     }
 
-    private Converter<StrategicPolygonEntity, StrategicPolygonVO> strategicPolygonSimpleConverter() {
+    private Converter<StrategicPolygonEntity, StrategicPolygonVO> strategicPolygonSimpleConverter(Converter<GeoFeatureEntity, GeoFeatureVO> geoFeatureConverter) {
         return (entity) -> {
             StrategicPolygonVO vo = new StrategicPolygonVO();
             if(entity != null) {
@@ -160,7 +165,8 @@ public class PolygonServiceImpl implements PolygonService {
                 vo.setUpdatedAt(entity.getUpdatedAt());
                 vo.setV(entity.getV());
                 vo.setVersion(entity.getVersion());
-
+                vo.setGeoFeatures(entity.getGeoFeatures().stream()
+                        .map(gf -> geoFeatureConverter.convert(gf)).collect(Collectors.toList()));
             }
             return vo;
         };
@@ -169,31 +175,102 @@ public class PolygonServiceImpl implements PolygonService {
 
     @Override
     public List<StrategicPolygonVO> retrieveAll() {
-        return null;
+        List<StrategicPolygonVO> voList = new ArrayList<>();
+        List<StrategicPolygonEntity> entityList = this.repository.findAll();
+        for(StrategicPolygonEntity entity : entityList) {
+            StrategicPolygonVO vo = this.strategicPolygonSimpleConverter.convert(entity);
+            voList.add(vo);
+        }
+        LOGGER.info("Found {} polygons", voList.size());
+        return voList;
     }
 
     @Override
-    public StrategicPolygonDetailedVO retrieveById(String id) {
-        return null;
+    public StrategicPolygonDetailedVO retrieveById(String id) throws PolygonServiceException {
+        if(StringUtils.hasText(id)) {
+            Optional<StrategicPolygonEntity> optEntity = this.repository.findById(id);
+            if(optEntity.isPresent()) {
+                StrategicPolygonEntity entity = optEntity.get();
+                StrategicPolygonDetailedVO vo = this.strategicPolygonComplexConverter.convert(entity);
+                LOGGER.info("Found polygon with id: {}", id);
+                return vo;
+            } else {
+                LOGGER.error("No polygon found with id: {}", id);
+                throw new PolygonServiceException("No polygon found that matches with id", PolygonErrorCode.NOT_FOUND, new Object[] {"id", id});
+            }
+        } else {
+            LOGGER.error("Invalid id: {}", id);
+            throw new PolygonServiceException("Invalid id", PolygonErrorCode.INVALID_PARAMETER, new Object[] {"id"});
+        }
     }
 
     @Override
-    public StrategicPolygonDetailedVO retrieveByName(String name) {
-        return null;
+    public StrategicPolygonDetailedVO retrieveByLegacyId(String legacyId) throws PolygonServiceException {
+        if(StringUtils.hasText(legacyId)) {
+            StrategicPolygonEntity entity = this.repository.findByLegacyId(legacyId);
+            if(entity != null) {
+                StrategicPolygonDetailedVO vo = this.strategicPolygonComplexConverter.convert(entity);
+                LOGGER.info("Found polygon with legacyId: {}", legacyId);
+                return vo;
+            } else {
+                LOGGER.error("No polygon found with legacyId: {}", legacyId);
+                throw new PolygonServiceException("No polygon found that matches with legacyId", PolygonErrorCode.NOT_FOUND, new Object[] {"legacyId", legacyId});
+            }
+        } else {
+            LOGGER.error("Invalid legacyId: {}", legacyId);
+            throw new PolygonServiceException("Invalid legacyId", PolygonErrorCode.INVALID_PARAMETER, new Object[] {"legacyId"});
+        }
     }
 
     @Override
-    public StrategicPolygonDetailedVO retrieveByCityId(String cityId) {
-        return null;
+    public List<StrategicPolygonVO> retrieveByType(String type) throws PolygonServiceException {
+        if(StringUtils.hasText(type)) {
+            List<StrategicPolygonVO> voList = new ArrayList<>();
+            List<StrategicPolygonEntity> entityList = this.repository.findAllByType(type);
+            for(StrategicPolygonEntity entity : entityList) {
+                StrategicPolygonVO vo = this.strategicPolygonSimpleConverter.convert(entity);
+                voList.add(vo);
+            }
+            LOGGER.info("Found {} polygons of type: {}", voList.size(), type);
+            return voList;
+        } else {
+            LOGGER.error("Invalid type: {}", type);
+            throw new PolygonServiceException("Invalid type", PolygonErrorCode.INVALID_PARAMETER, new Object[] {"type"});
+        }
     }
 
     @Override
-    public StrategicPolygonDetailedVO retrieveByLegacyId(String legacyId) {
-        return null;
+    public List<StrategicPolygonVO> retrieveByCityId(String cityId) throws PolygonServiceException {
+        if(StringUtils.hasText(cityId)) {
+            List<StrategicPolygonVO> voList = new ArrayList<>();
+            List<StrategicPolygonEntity> entityList = this.repository.findAllByCityId(cityId);
+            for(StrategicPolygonEntity entity : entityList) {
+                StrategicPolygonVO vo = this.strategicPolygonSimpleConverter.convert(entity);
+                voList.add(vo);
+            }
+            LOGGER.info("Found {} polygons of cityId: {}", voList.size(), cityId);
+            return voList;
+        } else {
+            LOGGER.error("Invalid cityId: {}", cityId);
+            throw new PolygonServiceException("Invalid cityId", PolygonErrorCode.INVALID_PARAMETER, new Object[] {"cityId"});
+        }
     }
 
     @Override
-    public List<StrategicPolygonVO> retrieveByType(String type) {
-        return null;
+    public List<StrategicPolygonVO> retrieveByName(String name) throws PolygonServiceException {
+        if(StringUtils.hasText(name)) {
+            List<StrategicPolygonVO> voList = new ArrayList<>();
+            List<StrategicPolygonEntity> entityList = this.repository.findAllByName(name);
+            for(StrategicPolygonEntity entity : entityList) {
+                StrategicPolygonVO vo = this.strategicPolygonSimpleConverter.convert(entity);
+                voList.add(vo);
+            }
+            LOGGER.info("Found {} polygons of name: {}", voList.size(), name);
+            return voList;
+        } else {
+            LOGGER.error("Invalid name: {}", name);
+            throw new PolygonServiceException("Invalid name", PolygonErrorCode.INVALID_PARAMETER, new Object[] {"name"});
+        }
     }
+
 }

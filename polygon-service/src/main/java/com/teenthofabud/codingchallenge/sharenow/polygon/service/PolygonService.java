@@ -1,6 +1,7 @@
 package com.teenthofabud.codingchallenge.sharenow.polygon.service;
 
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.entity.StrategicPolygonEntity;
+import com.teenthofabud.codingchallenge.sharenow.polygon.model.error.PolygonServiceException;
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.vo.StrategicPolygonDetailedVO;
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.vo.StrategicPolygonVO;
 import org.springframework.stereotype.Service;
@@ -12,14 +13,14 @@ public interface PolygonService {
 
     public List<StrategicPolygonVO> retrieveAll();
 
-    public StrategicPolygonDetailedVO retrieveById(String id);
+    public StrategicPolygonDetailedVO retrieveById(String id) throws PolygonServiceException;
 
-    public StrategicPolygonDetailedVO retrieveByName(String name);
+    public StrategicPolygonDetailedVO retrieveByLegacyId(String legacyId) throws PolygonServiceException;
 
-    public StrategicPolygonDetailedVO retrieveByCityId(String cityId);
+    public List<StrategicPolygonVO> retrieveByName(String name) throws PolygonServiceException;
 
-    public StrategicPolygonDetailedVO retrieveByLegacyId(String legacyId);
+    public List<StrategicPolygonVO> retrieveByType(String type) throws PolygonServiceException;
 
-    public List<StrategicPolygonVO> retrieveByType(String type);
+    public List<StrategicPolygonVO> retrieveByCityId(String cityId) throws PolygonServiceException;
 
 }

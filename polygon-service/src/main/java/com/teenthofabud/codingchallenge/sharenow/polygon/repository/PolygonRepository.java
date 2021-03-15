@@ -9,12 +9,12 @@ import java.util.List;
 @Repository
 public interface PolygonRepository extends MongoRepository<StrategicPolygonEntity, String> {
 
-    public StrategicPolygonEntity findByName(String name);
+    public List<StrategicPolygonEntity> findAllByName(String name);
 
-    public StrategicPolygonEntity findByCityId(String cityId);
+    public List<StrategicPolygonEntity> findAllByCityId(String cityId);
 
     public StrategicPolygonEntity findByLegacyId(String legacyId);
 
-    public List<StrategicPolygonEntity> findByType(String type);
+    public List<StrategicPolygonEntity> findAllByType(String type);
 
 }

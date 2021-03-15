@@ -10,7 +10,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Locale;
 
 @Configuration
-@EnableRedisRepositories
+@EnableRedisRepositories(basePackages = "com.teenthofabud.codingchallenge.sharenow.car.repository")
 public class CarServiceConfiguration {
 
     @Bean

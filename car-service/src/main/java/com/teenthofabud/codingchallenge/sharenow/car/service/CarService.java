@@ -10,8 +10,8 @@ import java.util.List;
 @Service
 public interface CarService {
 
-    public List<CarVO> retrieveAllVehicles();
+    public List<CarVO> retrieveAllCars();
 
-    public CarDetailsVO retrieveVehicleDetailsByVin(String vin) throws CarServiceException;
+    public CarDetailsVO retrieveCarDetailsByVin(String vin) throws CarServiceException;
 
 }

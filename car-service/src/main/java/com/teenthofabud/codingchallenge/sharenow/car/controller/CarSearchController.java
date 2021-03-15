@@ -25,20 +25,20 @@ public class CarSearchController {
     private CarService service;
 
     @GetMapping("vin/{vin}")
-    public ResponseEntity<?> getVehicleByVin(@PathVariable String vin) throws CarServiceException {
-        LOGGER.info("Requesting vehicle with vin: {}", vin);
-        CarDetailsVO vo = this.service.retrieveVehicleDetailsByVin(vin);
+    public ResponseEntity<?> getCarByVin(@PathVariable String vin) throws CarServiceException {
+        LOGGER.info("Requesting car with vin: {}", vin);
+        CarDetailsVO vo = this.service.retrieveCarDetailsByVin(vin);
         ResponseEntity<CarDetailsVO> response = ResponseEntity.ok(vo);
-        LOGGER.info("Responding with vehicle of vin: {}", vin);
+        LOGGER.info("Responding with car of vin: {}", vin);
         return response;
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllVehicles() throws CarServiceException {
-        LOGGER.info("Requesting all vehicles");
-        List<CarVO> voList = this.service.retrieveAllVehicles();
+    public ResponseEntity<?> getAllCars() throws CarServiceException {
+        LOGGER.info("Requesting all cars");
+        List<CarVO> voList = this.service.retrieveAllCars();
         ResponseEntity<List<CarVO>> response = ResponseEntity.ok(voList);
-        LOGGER.info("Responding with all available vehicles");
+        LOGGER.info("Responding with all available cars");
         return response;
     }
 

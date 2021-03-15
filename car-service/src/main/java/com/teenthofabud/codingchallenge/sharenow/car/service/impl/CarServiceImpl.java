@@ -34,7 +34,7 @@ public class CarServiceImpl implements CarService {
 
     private CarEntity2DetailedVOConverter complexVOConverter;
 
-    private Comparator<CarEntity> cmpVehicleByVin;
+    private Comparator<CarEntity> cmpCarByVin;
 
     @PostConstruct
     private void init() {
@@ -69,41 +69,41 @@ public class CarServiceImpl implements CarService {
             }
             return vo;
         };
-        this.cmpVehicleByVin = (v1, v2) -> {
-          return v1.getVin().compareTo(v2.getVin());
+        this.cmpCarByVin = (v1, v2) -> {
+            if(v1 != null && v2 != null) {
+                return v1.getVin().compareTo(v2.getVin());
+            } else {
+                return 0;
+            }
         };
     }
 
     @Override
-    public List<CarVO> retrieveAllVehicles() {
+    public List<CarVO> retrieveAllCars() {
         List<CarVO> carVOList = new ArrayList<>();
         Iterable<CarEntity> entityItr = this.repository.findAll();
         for(CarEntity entity : entityItr) {
-            CarVO vo = this.simpleVOConverter.convert(entity);
-            carVOList.add(vo);
+            if(entity != null && StringUtils.hasText(entity.getVin())) {
+                CarVO vo = this.simpleVOConverter.convert(entity);
+                carVOList.add(vo);
+            }
         }
-        LOGGER.info("Found {} vehicles", carVOList.size());
+        LOGGER.info("Found {} cars", carVOList.size());
         return carVOList;
     }
 
     @Override
-    public CarDetailsVO retrieveVehicleDetailsByVin(String vin) throws CarServiceException {
+    public CarDetailsVO retrieveCarDetailsByVin(String vin) throws CarServiceException {
         if(StringUtils.hasText(vin)) {
-            Iterable<CarEntity> entityItr = this.repository.findAll();
-            List<CarEntity> entityList = new ArrayList<>();
-            for(CarEntity entity : entityItr) {
-                entityList.add(entity);
-            }
-            Collections.sort(entityList, cmpVehicleByVin);
-            int idx = Collections.binarySearch(entityList, new CarEntity(vin), cmpVehicleByVin);
-            if(idx >= 0) {
-                CarEntity entity = entityList.get(idx);
+            Optional<CarEntity> optEntity = this.repository.findById(vin);
+            if(optEntity.isPresent()) {
+                CarEntity entity = optEntity.get();
                 CarDetailsVO vo = this.complexVOConverter.convert(entity);
-                LOGGER.info("Found vehicle by vin: {}", vin);
+                LOGGER.info("Found car by vin: {}", vin);
                 return vo;
             } else {
-                LOGGER.error("No vehicle found with vin: {}", vin);
-                throw new CarServiceException("No vehicle found that matches with vin", CarErrorCode.NOT_FOUND, new Object[] {"vin", vin});
+                LOGGER.error("No car found with vin: {}", vin);
+                throw new CarServiceException("No car found that matches with vin", CarErrorCode.NOT_FOUND, new Object[] {"vin", vin});
             }
         } else {
             LOGGER.error("Invalid vin: {}", vin);
