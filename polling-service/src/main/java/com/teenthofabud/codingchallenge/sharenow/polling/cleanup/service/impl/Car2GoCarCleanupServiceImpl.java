@@ -1,3 +1,4 @@
+/*
 package com.teenthofabud.codingchallenge.sharenow.polling.cleanup.service.impl;
 
 import com.teenthofabud.codingchallenge.sharenow.polling.PollingMonitor;
@@ -54,10 +55,10 @@ public class Car2GoCarCleanupServiceImpl implements CarCleanupService {
         };
     }
 
-
-    @Override
-    @Scheduled(cron = "${ps.cleanup.cron.expression:*/90 * * * *}")
-    public void clearStaleCarsForConfiguredCity() {
+*/
+//    @Override
+//    @Scheduled(cron = "${ps.cleanup.cron.expression:*/90 * * * * *}")
+/*    public void clearStaleCarsForConfiguredCity() {
         synchronized (monitor) {
             Iterable<CarEntity> itr = this.repository.findAll();
             RKeys keys = redisson.getKeys();
@@ -75,4 +76,4 @@ public class Car2GoCarCleanupServiceImpl implements CarCleanupService {
         }
     }
 
-}
+}*/

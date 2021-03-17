@@ -52,16 +52,13 @@ public class Car2GoCarRefreshServiceImpl implements CarRefreshService {
 
     private int counter;
 
-    @Value("${ps.refresh.search.location:Stuttgart}")
+    @Value("${ps.refresh.search.location}")
     private String searchLocation;
 
-    @Value("${ps.refresh.bucket.size:5}")
-    private int bucketSize;
-
-    @Value("${car2go.base.url:localhost:3000}")
+    @Value("${car2go.base.url:localhost}")
     private String car2goBaseURL;
 
-    @Value("${car2go.vehicles.by.location.uri:/vehicles/{locationName}}")
+    @Value("${car2go.vehicles.by.location.uri}")
     private String car2goVehiclesByLocationURI;
 
     @Autowired

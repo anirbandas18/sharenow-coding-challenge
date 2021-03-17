@@ -1,0 +1,124 @@
+version: "3.9"
+
+services:
+
+  cache-service:
+    image: redis:3.0.7-alpine
+    container_name: cache-service
+    ports:
+    - "6379:6379"
+
+  documentdb-service:
+    image: mongo:4.4-bionic
+    container_name: documentdb-service
+    volumes:
+      - "/data/db:/opt/sharenow-coding-challenge-data/mongodb"
+    ports:
+    - "27017:27017"
+
+  tracing-service:
+    image: openzipkin/zipkin
+    container_name: tracing-service
+    ports:
+    - "9411:9411"
+
+  car2godeveloper-service:
+    image: car2godeveloper/api-for-coding-challenge
+    container_name: car2godeveloper-service
+    ports:
+    - "3000:3000"
+
+  naming-service:
+    image: teenthofabud/sharenow-coding-challenge-naming-service:1.0.0-SNAPSHOT
+    container_name: naming-service
+    ports:
+    - "8761:8761"
+
+  configuration-service:
+    image: teenthofabud/sharenow-coding-challenge-configuration-service:1.0.0-SNAPSHOT
+    container_name: configuration-service
+    ports:
+    - "8888:8888"
+
+  gateway-service:
+    image: teenthofabud/sharenow-coding-challenge-gateway-service:1.0.0-SNAPSHOT
+    container_name: gateway-service
+    environment:
+      - PROFILE=staging
+      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - NAMING_SERVER_URL=http://naming-service:8761
+    depends_on:
+      - configuration-service
+      - naming-service
+    ports:
+    - "8081:8081"
+
+  polling-service:
+    image: teenthofabud/sharenow-coding-challenge-polling-service:1.0.0-SNAPSHOT
+    container_name: polling-service
+    environment:
+      - PROFILE=staging
+      - CACHE_SERVER_HOST=cache-service
+      - CACHE_SERVER_PORT=6379
+      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - NAMING_SERVER_URL=http://naming-service:8761
+      - CAR2GO_SERVER_URL=http://car2godeveloper-service:3000
+    depends_on:
+      - cache-service
+      - configuration-service
+      - naming-service
+      - car2godeveloper-service
+      - gateway-service
+
+  car-service:
+    image: teenthofabud/sharenow-coding-challenge-car-service:1.0.0-SNAPSHOT
+    container_name: car-service
+    environment:
+      - PROFILE=staging
+      - CACHE_SERVER_HOST=cache-service
+      - CACHE_SERVER_PORT=6379
+      - TRACING_SERVER_URL=http://tracing-service:9411
+      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - NAMING_SERVER_URL=http://naming-service:8761
+    depends_on:
+      - cache-service
+      - tracing-service
+      - configuration-service
+      - polling-service
+      - naming-service
+      - gateway-service
+
+  polygon-service:
+    image: teenthofabud/sharenow-coding-challenge-polygon-service:1.0.0-SNAPSHOT
+    container_name: polygon-service
+    environment:
+      - PROFILE=staging
+      - DOCUMENTDB_SERVER_HOST=documentdb-service
+      - DOCUMENTDB_SERVER_PORT=27017
+      - TRACING_SERVER_URL=http://tracing-service:9411
+      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - NAMING_SERVER_URL=http://naming-service:8761
+    depends_on:
+      - documentdb-service
+      - tracing-service
+      - configuration-service
+      - naming-service
+      - gateway-service
+
+  position-service:
+    image: teenthofabud/sharenow-coding-challenge-position-service:1.0.0-SNAPSHOT
+    container_name: position-service
+    environment:
+      - PROFILE=staging
+      - TRACING_SERVER_URL=http://tracing-service:9411
+      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - NAMING_SERVER_URL=http://naming-service:8761
+      - CAR_SERVICE_URL=http://car-service
+      - POLYGON_SERVICE_URL=http://polygon-service
+    depends_on:
+      - tracing-service
+      - car-service
+      - polygon-service
+      - configuration-service
+      - naming-service
+      - gateway-service
