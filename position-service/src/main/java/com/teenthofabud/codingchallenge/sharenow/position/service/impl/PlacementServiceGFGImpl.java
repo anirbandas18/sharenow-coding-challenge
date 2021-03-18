@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class PlacementServiceImpl implements PlacementService {
+public class PlacementServiceGFGImpl implements PlacementService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlacementServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlacementServiceGFGImpl.class);
 
     @Value("${poss.placement.infinite.end.limit}")
     private int infiniteEnd;
@@ -38,7 +38,40 @@ public class PlacementServiceImpl implements PlacementService {
         }
     }
 
+    // longitude - x
+    // latitude - y
+
+    /*private Orientation determineOrientation(Point a, Point b, Point c) {
+        LngLatAlt aCoordinates = a.getCoordinates();
+        LngLatAlt bCoordinates = b.getCoordinates();
+        LngLatAlt cCoordinates = c.getCoordinates();
+        double slopOfFirstSegment = (bCoordinates.getLatitude() - aCoordinates.getLatitude()) / bCoordinates.getLongitude() - aCoordinates.getLongitude();
+        double slopOfSecondSegment = (cCoordinates.getLatitude() - bCoordinates.getLatitude()) / cCoordinates.getLongitude() - bCoordinates.getLongitude();
+        if(slopOfFirstSegment < slopOfSecondSegment) {
+            return Orientation.ANTI_CLOCKWISE;
+        } else if (slopOfFirstSegment > slopOfSecondSegment) {
+            return Orientation.CLOCKWISE;
+        } else {
+            return Orientation.COLLINEAR;
+        }
+    }*/
+
     private Orientation determineOrientation(Point a, Point b, Point c) {
+        LngLatAlt aCoordinates = a.getCoordinates();
+        LngLatAlt bCoordinates = b.getCoordinates();
+        LngLatAlt cCoordinates = c.getCoordinates();
+        double slopeDifference = (bCoordinates.getLatitude() - aCoordinates.getLatitude()) * (cCoordinates.getLongitude() - bCoordinates.getLongitude())
+                - (bCoordinates.getLongitude() - aCoordinates.getLongitude()) * (cCoordinates.getLatitude() - bCoordinates.getLatitude());
+        if(slopeDifference < 0) {
+            return Orientation.CLOCKWISE;
+        } else if (slopeDifference > 0) {
+            return Orientation.ANTI_CLOCKWISE;
+        } else {
+            return Orientation.COLLINEAR;
+        }
+    }
+
+    /*private Orientation determineOrientation(Point a, Point b, Point c) {
         LngLatAlt aCoordinates = a.getCoordinates();
         LngLatAlt bCoordinates = b.getCoordinates();
         LngLatAlt cCoordinates = c.getCoordinates();
@@ -51,7 +84,7 @@ public class PlacementServiceImpl implements PlacementService {
             orientation = Orientation.ANTI_CLOCKWISE;
         }
         return orientation;
-    }
+    }*/
 
     private boolean doesIntersect(Point a1, Point b1, Point a2, Point b2) {
         boolean status = false;

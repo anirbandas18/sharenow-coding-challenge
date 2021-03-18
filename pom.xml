@@ -17,13 +17,13 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>polygon-service</module>
-        <module>car-service</module>
-        <module>position-service</module>
+        <module>configuration-service</module>
         <module>naming-service</module>
         <module>gateway-service</module>
-        <module>configuration-service</module>
         <module>polling-service</module>
+        <module>car-service</module>
+        <module>polygon-service</module>
+        <module>position-service</module>
     </modules>
 
     <properties>

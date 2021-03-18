@@ -1,3 +1,4 @@
+/*
 package com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,3 +29,4 @@ public class StrategicPolygonDTO implements Serializable {
     private List<GeoFeatureDTO> geoFeatures;
 
 }
+*/

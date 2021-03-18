@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface PolygonService {
 
-    public List<StrategicPolygonVO> retrieveAll();
+    public List<StrategicPolygonDetailedVO> retrieveAll();
 
     public StrategicPolygonDetailedVO retrieveById(String id) throws PolygonServiceException;
 

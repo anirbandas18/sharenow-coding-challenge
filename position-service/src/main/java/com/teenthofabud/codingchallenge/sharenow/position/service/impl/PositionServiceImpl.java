@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.car.CarDetailsDTO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.car.PositionDTO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.GeoFeatureDTO;
-import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.StrategicPolygonDTO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.StrategicPolygonDetailedDTO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.error.PositionErrorCode;
 import com.teenthofabud.codingchallenge.sharenow.position.model.error.PositionServiceException;
@@ -119,7 +118,7 @@ public class PositionServiceImpl implements PositionService {
             List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonClient.getAllPolygons();
             if(polygonDTOList != null && !polygonDTOList.isEmpty()) {
                 LOGGER.info("Retrieved strategic polygons: {}", polygonDTOList.size());
-                for(StrategicPolygonDTO litePolygonDTO : polygonDTOList) {
+                for(StrategicPolygonDetailedDTO litePolygonDTO : polygonDTOList) {
                     StrategicPolygonDetailedDTO detailedPolygonDTO = this.polygonClient.getPolygonDetailsById(litePolygonDTO.getId());
                     if(this.placementService.isCarInsidePolygonConsiderOnlyOuterRing(carDTO, detailedPolygonDTO)) {
                         CarMappedVO carVO = this.carDetailsDTO2VOConverter.convert(carDTO);

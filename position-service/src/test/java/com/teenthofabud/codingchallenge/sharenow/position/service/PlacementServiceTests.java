@@ -5,7 +5,7 @@ import com.teenthofabud.codingchallenge.sharenow.position.model.dto.car.Position
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.StrategicPolygonDetailedDTO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.error.PositionErrorCode;
 import com.teenthofabud.codingchallenge.sharenow.position.model.error.PositionServiceException;
-import com.teenthofabud.codingchallenge.sharenow.position.service.impl.PlacementServiceImpl;
+import com.teenthofabud.codingchallenge.sharenow.position.service.impl.PlacementServiceGFGImpl;
 import org.geojson.LngLatAlt;
 import org.geojson.Polygon;
 import org.junit.Assert;
@@ -26,7 +26,7 @@ public class PlacementServiceTests {
 
     @BeforeAll
     public static void init() {
-        SERVICE = new PlacementServiceImpl();
+        SERVICE = new PlacementServiceGFGImpl();
         CAR = new CarDetailsDTO();
         STRATEGIC_POLYGON = new StrategicPolygonDetailedDTO();
     }

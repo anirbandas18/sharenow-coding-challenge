@@ -78,11 +78,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:19080/polygon/search",
+									"raw": "localhost:18080/polygon/search",
 									"host": [
 										"localhost"
 									],
-									"port": "19080",
+									"port": "18080",
 									"path": [
 										"polygon",
 										"search"
@@ -97,11 +97,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:19080/polygon/search/id/58a58bf685979b5415f3a39a",
+									"raw": "localhost:18080/polygon/search/id/58a58bf685979b5415f3a39a",
 									"host": [
 										"localhost"
 									],
-									"port": "19080",
+									"port": "18080",
 									"path": [
 										"polygon",
 										"search",
@@ -118,11 +118,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:19080/polygon/search/type/relocationzone",
+									"raw": "localhost:18080/polygon/search/type/relocationzone",
 									"host": [
 										"localhost"
 									],
-									"port": "19080",
+									"port": "18080",
 									"path": [
 										"polygon",
 										"search",
@@ -144,16 +144,16 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:18080/car/search/vin/1FMZU24X3XNTMBKKD",
+									"raw": "localhost:17080/car/search/vin/2GTHC79U44PF27A0W",
 									"host": [
 										"localhost"
 									],
-									"port": "18080",
+									"port": "17080",
 									"path": [
 										"car",
 										"search",
 										"vin",
-										"1FMZU24X3XNTMBKKD"
+										"2GTHC79U44PF27A0W"
 									]
 								}
 							},
@@ -165,14 +165,198 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:18080/car/search",
+									"raw": "localhost:17080/car/search",
 									"host": [
 										"localhost"
 									],
-									"port": "18080",
+									"port": "17080",
 									"path": [
 										"car",
 										"search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "position-service",
+					"item": [
+						{
+							"name": "get car in polygon",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:19080/position/search/car/vin/2GTHC79U44PF27A0W",
+									"host": [
+										"localhost"
+									],
+									"port": "19080",
+									"path": [
+										"position",
+										"search",
+										"car",
+										"vin",
+										"2GTHC79U44PF27A0W"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get polygon with cars",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:19080/position/search/polygon/id/58a58c0585979b5415f3a614",
+									"host": [
+										"localhost"
+									],
+									"port": "19080",
+									"path": [
+										"position",
+										"search",
+										"polygon",
+										"id",
+										"58a58c0585979b5415f3a614"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "gateway-service",
+					"item": [
+						{
+							"name": "get all cars via gateway",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:8081/car-service/car/search",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "8081",
+									"path": [
+										"car-service",
+										"car",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all polygons via gateway",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:8081/polygon-service/polygon/search",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "8081",
+									"path": [
+										"polygon-service",
+										"polygon",
+										"search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get polygon details by id via gateway",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:8081/polygon-service/polygon/search/id/58a58bf6766d51540f779930",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "8081",
+									"path": [
+										"polygon-service",
+										"polygon",
+										"search",
+										"id",
+										"58a58bf6766d51540f779930"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get car details by vin via gateway",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:8081/car-service/car/search/vin/1GJW7PFG2B0A5FJZX",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "8081",
+									"path": [
+										"car-service",
+										"car",
+										"search",
+										"vin",
+										"1GJW7PFG2B0A5FJZX"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get car in polygon by vin via gateway",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:8081/position-service/position/search/car/vin/1GJW7PFG2B0A5FJZX",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "8081",
+									"path": [
+										"position-service",
+										"position",
+										"search",
+										"car",
+										"vin",
+										"1GJW7PFG2B0A5FJZX"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get polygon with cars by polygon id via gateway",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:8081/position-service/position/search/polygon/id/58a58bf6766d51540f779930",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "8081",
+									"path": [
+										"position-service",
+										"position",
+										"search",
+										"polygon",
+										"id",
+										"58a58bf6766d51540f779930"
 									]
 								}
 							},

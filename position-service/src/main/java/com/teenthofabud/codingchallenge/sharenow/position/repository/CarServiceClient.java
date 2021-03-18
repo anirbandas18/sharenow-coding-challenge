@@ -11,13 +11,13 @@ import java.util.List;
 @FeignClient(value = "carServiceClient", url = "${poss.car-service.url}")
 public interface CarServiceClient {
 
-    @GetMapping("car-service/search")
+    @GetMapping("/search")
     public List<CarDTO> getAllCars();
 
-    @GetMapping("car-service/search/vin/{vin}")
+    @GetMapping("/search/vin/{vin}")
     public CarDetailsDTO getCarDetailsByVin(@PathVariable String vin);
 
-    @GetMapping("car-service/search/withdetails")
+    @GetMapping("/search/withdetails")
     public List<CarDetailsDTO> getAllCarsWithDetails();
 
 }

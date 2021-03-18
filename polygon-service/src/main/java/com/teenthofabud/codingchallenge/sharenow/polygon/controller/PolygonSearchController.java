@@ -26,55 +26,55 @@ public class PolygonSearchController {
 
     @GetMapping
     public ResponseEntity<?> getAllPolygons() {
-        LOGGER.info("Requesting all polygons");
-        List<StrategicPolygonVO> voList = this.service.retrieveAll();
-        ResponseEntity<List<StrategicPolygonVO>> response = ResponseEntity.ok(voList);
-        LOGGER.info("Responding with all available polygons");
+        LOGGER.info("Requesting all polygons and their details");
+        List<StrategicPolygonDetailedVO> voList = this.service.retrieveAll();
+        ResponseEntity<List<StrategicPolygonDetailedVO>> response = ResponseEntity.ok(voList);
+        LOGGER.info("Responding with all available polygons and their details");
         return response;
     }
 
     @GetMapping("cityid/{cityId}")
     public ResponseEntity<?> getAllPolygonsByCityId(@PathVariable String cityId) throws PolygonServiceException {
-        LOGGER.info("Requesting all polygons with cityId: {}", cityId);
+        LOGGER.info("Requesting all polygons with cityId: {} and their details", cityId);
         List<StrategicPolygonDetailedVO> voList = this.service.retrieveByCityId(cityId);
         ResponseEntity<List<StrategicPolygonDetailedVO>> response = ResponseEntity.ok(voList);
-        LOGGER.info("Responding with all available polygons with cityId: {}", cityId);
+        LOGGER.info("Responding with all available polygons with cityId: {} and their details", cityId);
         return response;
     }
 
     @GetMapping("type/{type}")
     public ResponseEntity<?> getAllPolygonsByType(@PathVariable String type) throws PolygonServiceException {
-        LOGGER.info("Requesting all polygons of type: {}", type);
+        LOGGER.info("Requesting all polygons of type: {} and their details", type);
         List<StrategicPolygonDetailedVO> voList = this.service.retrieveByType(type);
         ResponseEntity<List<StrategicPolygonDetailedVO>> response = ResponseEntity.ok(voList);
-        LOGGER.info("Responding with all available polygons with type: {}", type);
+        LOGGER.info("Responding with all available polygons with type: {} and their details", type);
         return response;
     }
 
     @GetMapping("name/{name}")
     public ResponseEntity<?> getPolygonByName(@PathVariable String name) throws PolygonServiceException {
-        LOGGER.info("Requesting all polygons with name: {}", name);
+        LOGGER.info("Requesting all polygons with name: {} and their details", name);
         List<StrategicPolygonDetailedVO> voList = this.service.retrieveByName(name);
         ResponseEntity<List<StrategicPolygonDetailedVO>> response = ResponseEntity.ok(voList);
-        LOGGER.info("Responding with all available polygons with name: {}", name);
+        LOGGER.info("Responding with all available polygons with name: {} and their details", name);
         return response;
     }
 
     @GetMapping("id/{id}")
     public ResponseEntity<?> getPolygonById(@PathVariable String id) throws PolygonServiceException {
-        LOGGER.info("Requesting polygon with id: {}", id);
+        LOGGER.info("Requesting polygon with id: {} and its details", id);
         StrategicPolygonDetailedVO vo = this.service.retrieveById(id);
         ResponseEntity<StrategicPolygonDetailedVO> response = ResponseEntity.ok(vo);
-        LOGGER.info("Responding with polygon of id: {}", id);
+        LOGGER.info("Responding with polygon of id: {} and its details", id);
         return response;
     }
 
     @GetMapping("legacyid/{legacyId}")
     public ResponseEntity<?> getPolygonByCityId(@PathVariable String legacyId) throws PolygonServiceException {
-        LOGGER.info("Requesting polygon with legacyId: {}", legacyId);
+        LOGGER.info("Requesting polygon with legacyId: {} and their details", legacyId);
         StrategicPolygonDetailedVO vo = this.service.retrieveByLegacyId(legacyId);
         ResponseEntity<StrategicPolygonDetailedVO> response = ResponseEntity.ok(vo);
-        LOGGER.info("Responding with polygon of legacyId: {}", legacyId);
+        LOGGER.info("Responding with polygon of legacyId: {} and their details", legacyId);
         return response;
     }
 

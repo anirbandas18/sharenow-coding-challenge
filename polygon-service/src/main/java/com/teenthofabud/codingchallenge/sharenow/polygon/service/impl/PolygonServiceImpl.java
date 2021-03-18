@@ -174,11 +174,11 @@ public class PolygonServiceImpl implements PolygonService {
 
 
     @Override
-    public List<StrategicPolygonVO> retrieveAll() {
-        List<StrategicPolygonVO> voList = new ArrayList<>();
+    public List<StrategicPolygonDetailedVO> retrieveAll() {
+        List<StrategicPolygonDetailedVO> voList = new ArrayList<>();
         List<StrategicPolygonEntity> entityList = this.repository.findAll();
         for(StrategicPolygonEntity entity : entityList) {
-            StrategicPolygonVO vo = this.strategicPolygonSimpleConverter.convert(entity);
+            StrategicPolygonDetailedVO vo = this.strategicPolygonComplexConverter.convert(entity);
             voList.add(vo);
         }
         LOGGER.info("Found {} polygons", voList.size());
