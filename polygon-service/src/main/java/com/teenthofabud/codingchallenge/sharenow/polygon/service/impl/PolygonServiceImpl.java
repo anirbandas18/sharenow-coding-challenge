@@ -223,12 +223,12 @@ public class PolygonServiceImpl implements PolygonService {
     }
 
     @Override
-    public List<StrategicPolygonVO> retrieveByType(String type) throws PolygonServiceException {
+    public List<StrategicPolygonDetailedVO> retrieveByType(String type) throws PolygonServiceException {
         if(StringUtils.hasText(type)) {
-            List<StrategicPolygonVO> voList = new ArrayList<>();
+            List<StrategicPolygonDetailedVO> voList = new ArrayList<>();
             List<StrategicPolygonEntity> entityList = this.repository.findAllByType(type);
             for(StrategicPolygonEntity entity : entityList) {
-                StrategicPolygonVO vo = this.strategicPolygonSimpleConverter.convert(entity);
+                StrategicPolygonDetailedVO vo = this.strategicPolygonComplexConverter.convert(entity);
                 voList.add(vo);
             }
             LOGGER.info("Found {} polygons of type: {}", voList.size(), type);
@@ -240,12 +240,12 @@ public class PolygonServiceImpl implements PolygonService {
     }
 
     @Override
-    public List<StrategicPolygonVO> retrieveByCityId(String cityId) throws PolygonServiceException {
+    public List<StrategicPolygonDetailedVO> retrieveByCityId(String cityId) throws PolygonServiceException {
         if(StringUtils.hasText(cityId)) {
-            List<StrategicPolygonVO> voList = new ArrayList<>();
+            List<StrategicPolygonDetailedVO> voList = new ArrayList<>();
             List<StrategicPolygonEntity> entityList = this.repository.findAllByCityId(cityId);
             for(StrategicPolygonEntity entity : entityList) {
-                StrategicPolygonVO vo = this.strategicPolygonSimpleConverter.convert(entity);
+                StrategicPolygonDetailedVO vo = this.strategicPolygonComplexConverter.convert(entity);
                 voList.add(vo);
             }
             LOGGER.info("Found {} polygons of cityId: {}", voList.size(), cityId);
@@ -257,12 +257,12 @@ public class PolygonServiceImpl implements PolygonService {
     }
 
     @Override
-    public List<StrategicPolygonVO> retrieveByName(String name) throws PolygonServiceException {
+    public List<StrategicPolygonDetailedVO> retrieveByName(String name) throws PolygonServiceException {
         if(StringUtils.hasText(name)) {
-            List<StrategicPolygonVO> voList = new ArrayList<>();
+            List<StrategicPolygonDetailedVO> voList = new ArrayList<>();
             List<StrategicPolygonEntity> entityList = this.repository.findAllByName(name);
             for(StrategicPolygonEntity entity : entityList) {
-                StrategicPolygonVO vo = this.strategicPolygonSimpleConverter.convert(entity);
+                StrategicPolygonDetailedVO vo = this.strategicPolygonComplexConverter.convert(entity);
                 voList.add(vo);
             }
             LOGGER.info("Found {} polygons of name: {}", voList.size(), name);

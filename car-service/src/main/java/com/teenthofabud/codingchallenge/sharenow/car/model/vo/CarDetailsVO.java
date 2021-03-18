@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CarDetailsVO {
+public class CarDetailsVO implements Comparable<CarDetailsVO> {
 
     private int id;
     private int locationId;
@@ -15,4 +15,8 @@ public class CarDetailsVO {
     private float fuel;
     private String model;
 
+    @Override
+    public int compareTo(CarDetailsVO o) {
+        return this.vin.compareTo(o.getVin());
+    }
 }

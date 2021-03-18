@@ -5,47 +5,72 @@ services:
   cache-service:
     image: redis:3.0.7-alpine
     container_name: cache-service
+    hostname: cache-service
     ports:
     - "6379:6379"
+    networks:
+      - car
 
   documentdb-service:
     image: mongo:4.4-bionic
     container_name: documentdb-service
+    hostname: documentdb-service
     volumes:
       - "/data/db:/opt/sharenow-coding-challenge-data/mongodb"
     ports:
     - "27017:27017"
+    networks:
+      - polygon
 
   tracing-service:
     image: openzipkin/zipkin
     container_name: tracing-service
+    hostname: tracing-service
     ports:
     - "9411:9411"
+    networks:
+      - car
+      - polygon
 
   car2godeveloper-service:
     image: car2godeveloper/api-for-coding-challenge
     container_name: car2godeveloper-service
+    hostname: car2godeveloper-service
     ports:
     - "3000:3000"
+    networks:
+      - car
 
   naming-service:
     image: teenthofabud/sharenow-coding-challenge-naming-service:1.0.0-SNAPSHOT
     container_name: naming-service
+    hostname: naming-service
     ports:
     - "8761:8761"
+    networks:
+      - car
+      - polygon
 
   configuration-service:
     image: teenthofabud/sharenow-coding-challenge-configuration-service:1.0.0-SNAPSHOT
     container_name: configuration-service
+    hostname: configuration-service
     ports:
     - "8888:8888"
+    networks:
+      - car
+      - polygon
 
   gateway-service:
     image: teenthofabud/sharenow-coding-challenge-gateway-service:1.0.0-SNAPSHOT
     container_name: gateway-service
+    hostname: gateway-service
+    networks:
+      - car
+      - polygon
     environment:
       - PROFILE=staging
-      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - CONFIGURATION_SERVER_URL=http://configuration-service:8888
       - NAMING_SERVER_URL=http://naming-service:8761
     depends_on:
       - configuration-service
@@ -56,11 +81,14 @@ services:
   polling-service:
     image: teenthofabud/sharenow-coding-challenge-polling-service:1.0.0-SNAPSHOT
     container_name: polling-service
+    hostname: polling-service
+    networks:
+      - car
     environment:
       - PROFILE=staging
       - CACHE_SERVER_HOST=cache-service
       - CACHE_SERVER_PORT=6379
-      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - CONFIGURATION_SERVER_URL=http://configuration-service:8888
       - NAMING_SERVER_URL=http://naming-service:8761
       - CAR2GO_SERVER_URL=http://car2godeveloper-service:3000
     depends_on:
@@ -73,12 +101,15 @@ services:
   car-service:
     image: teenthofabud/sharenow-coding-challenge-car-service:1.0.0-SNAPSHOT
     container_name: car-service
+    hostname: car-service
+    networks:
+      - car
     environment:
       - PROFILE=staging
       - CACHE_SERVER_HOST=cache-service
       - CACHE_SERVER_PORT=6379
       - TRACING_SERVER_URL=http://tracing-service:9411
-      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - CONFIGURATION_SERVER_URL=http://configuration-service:8888
       - NAMING_SERVER_URL=http://naming-service:8761
     depends_on:
       - cache-service
@@ -91,12 +122,15 @@ services:
   polygon-service:
     image: teenthofabud/sharenow-coding-challenge-polygon-service:1.0.0-SNAPSHOT
     container_name: polygon-service
+    hostname: polygon-service
+    networks:
+      - polygon
     environment:
       - PROFILE=staging
       - DOCUMENTDB_SERVER_HOST=documentdb-service
       - DOCUMENTDB_SERVER_PORT=27017
       - TRACING_SERVER_URL=http://tracing-service:9411
-      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - CONFIGURATION_SERVER_URL=http://configuration-service:8888
       - NAMING_SERVER_URL=http://naming-service:8761
     depends_on:
       - documentdb-service
@@ -108,13 +142,17 @@ services:
   position-service:
     image: teenthofabud/sharenow-coding-challenge-position-service:1.0.0-SNAPSHOT
     container_name: position-service
+    hostname: position-service
+    networks:
+      - car
+      - polygon
     environment:
       - PROFILE=staging
       - TRACING_SERVER_URL=http://tracing-service:9411
-      - CONFIGURATION_SERVER_URL=http://configuration-service/8888
+      - CONFIGURATION_SERVER_URL=http://configuration-service:8888
       - NAMING_SERVER_URL=http://naming-service:8761
-      - CAR_SERVICE_URL=http://car-service
-      - POLYGON_SERVICE_URL=http://polygon-service
+      - CAR_SERVICE_URL=car-service
+      - POLYGON_SERVICE_URL=polygon-service
     depends_on:
       - tracing-service
       - car-service
@@ -122,3 +160,7 @@ services:
       - configuration-service
       - naming-service
       - gateway-service
+
+networks:
+  car:
+  polygon:

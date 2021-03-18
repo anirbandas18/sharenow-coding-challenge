@@ -22,7 +22,7 @@ public class RestServiceErrorHandler {
     private MessageSource messageSource;
 
     @ExceptionHandler(PositionServiceException.class)
-    public ResponseEntity<ErrorVO> handleVehicleServiceException(PositionServiceException psex) {
+    public ResponseEntity<ErrorVO> handlePositionServiceException(PositionServiceException psex) {
         LOGGER.error("Error encountered: {}", psex);
         ErrorVO vo = new ErrorVO();
         String msg = messageSource.getMessage(psex.getError().getErrorCode(), null, Locale.US);

@@ -5,14 +5,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class TimedOptionsVO implements Serializable {
+public class ComputedDTO implements Serializable {
 
-    private String key;
-    private List<List<Double>> changesOverTime;
+    private ActiveTimedOptionsDTO activeTimedOptions;
 
 }

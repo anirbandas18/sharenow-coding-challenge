@@ -1,6 +1,7 @@
 package com.teenthofabud.codingchallenge.sharenow.position.repository;
 
-import com.teenthofabud.codingchallenge.sharenow.position.model.dto.car.CarVO;
+import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.StrategicPolygonDTO;
+import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.StrategicPolygonDetailedDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,16 +12,16 @@ import java.util.List;
 @FeignClient(value = "polygonServiceClient", url = "${poss.polygon-service.url}")
 public interface PolygonServiceClient {
 
-    @GetMapping("search")
-    public List<CarVO> getAllPolygons();
+    @GetMapping("polygon-service/search")
+    public List<StrategicPolygonDetailedDTO> getAllPolygons();
 
-    @GetMapping("search/cityid/{cityId}")
-    public List<CarVO> getAllPolygonsByCityId(@PathVariable String cityId);
+    @GetMapping("polygon-service/search/cityid/{cityId}")
+    public List<StrategicPolygonDetailedDTO> getAllPolygonsByCityId(@PathVariable String cityId);
 
-    @GetMapping("search/name/{name}")
-    public List<CarVO> getAllPolygonsByName(@PathVariable String name);
+    @GetMapping("polygon-service/search/name/{name}")
+    public List<StrategicPolygonDetailedDTO> getAllPolygonsByName(@PathVariable String name);
 
-    @GetMapping("search/id/{id}")
-    public List<CarVO> getPolygonDetailsById(@PathVariable String id);
+    @GetMapping("polygon-service/search/id/{id}")
+    public StrategicPolygonDetailedDTO getPolygonDetailsById(@PathVariable String id);
 
 }

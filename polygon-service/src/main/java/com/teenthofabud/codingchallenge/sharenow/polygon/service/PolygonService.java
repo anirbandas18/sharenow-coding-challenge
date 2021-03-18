@@ -17,10 +17,10 @@ public interface PolygonService {
 
     public StrategicPolygonDetailedVO retrieveByLegacyId(String legacyId) throws PolygonServiceException;
 
-    public List<StrategicPolygonVO> retrieveByName(String name) throws PolygonServiceException;
+    public List<StrategicPolygonDetailedVO> retrieveByName(String name) throws PolygonServiceException;
 
-    public List<StrategicPolygonVO> retrieveByType(String type) throws PolygonServiceException;
+    public List<StrategicPolygonDetailedVO> retrieveByType(String type) throws PolygonServiceException;
 
-    public List<StrategicPolygonVO> retrieveByCityId(String cityId) throws PolygonServiceException;
+    public List<StrategicPolygonDetailedVO> retrieveByCityId(String cityId) throws PolygonServiceException;
 
 }

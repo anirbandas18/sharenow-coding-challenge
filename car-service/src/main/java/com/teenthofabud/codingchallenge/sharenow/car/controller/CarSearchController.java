@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("search")
@@ -39,6 +40,15 @@ public class CarSearchController {
         List<CarVO> voList = this.service.retrieveAllCars();
         ResponseEntity<List<CarVO>> response = ResponseEntity.ok(voList);
         LOGGER.info("Responding with all available cars");
+        return response;
+    }
+
+    @GetMapping("withdetails")
+    public ResponseEntity<?> getAllCarsWithDetails() throws CarServiceException {
+        LOGGER.info("Requesting all cars and their details");
+        Set<CarDetailsVO> voList = this.service.retrieveAllCarsWithDetails();
+        ResponseEntity<Set<CarDetailsVO>> response = ResponseEntity.ok(voList);
+        LOGGER.info("Responding with all available cars and their details");
         return response;
     }
 

@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ActiveTimedOptionsVO implements Serializable {
+public class ActiveTimedOptionsDTO implements Serializable {
 
     private int min;
     private int max;

@@ -4,7 +4,7 @@ package com.teenthofabud.codingchallenge.sharenow.polygon.model.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.geojson.GeoJsonObject;
+import org.geojson.Point;
 
 @Getter
 @Setter
@@ -12,6 +12,6 @@ import org.geojson.GeoJsonObject;
 public class GeoFeatureEntity {
 
     private String name;
-    private GeoJsonObject geometry;
+    private Point geometry;
 
 }

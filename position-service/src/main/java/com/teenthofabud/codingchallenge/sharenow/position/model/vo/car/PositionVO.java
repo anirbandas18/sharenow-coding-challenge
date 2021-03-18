@@ -1,4 +1,4 @@
-package com.teenthofabud.codingchallenge.sharenow.position.model.dto.car;
+package com.teenthofabud.codingchallenge.sharenow.position.model.vo.car;
 
 import lombok.Getter;
 import lombok.Setter;

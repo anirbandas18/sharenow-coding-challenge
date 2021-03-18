@@ -1,9 +1,6 @@
 package com.teenthofabud.codingchallenge.sharenow.car.model.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.redis.core.RedisHash;
@@ -18,6 +15,7 @@ import java.util.Date;
 @RedisHash("Car")
 @TypeAlias("Car")
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CarEntity implements Serializable {
 
     @Indexed
@@ -25,6 +23,7 @@ public class CarEntity implements Serializable {
     private int locationId;
     @Id
     @Indexed
+    @EqualsAndHashCode.Include
     private String vin;
     private String numberPlate;
     private PositionEntity position;

@@ -55,7 +55,7 @@ public class Car2GoCarRefreshServiceImpl implements CarRefreshService {
     @Value("${ps.refresh.search.location}")
     private String searchLocation;
 
-    @Value("${car2go.base.url:localhost}")
+    @Value("${car2go.base.url}")
     private String car2goBaseURL;
 
     @Value("${car2go.vehicles.by.location.uri}")

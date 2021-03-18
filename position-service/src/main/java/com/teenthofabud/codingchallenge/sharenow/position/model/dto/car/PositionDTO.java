@@ -1,4 +1,4 @@
-package com.teenthofabud.codingchallenge.sharenow.position.quadtree;
+package com.teenthofabud.codingchallenge.sharenow.position.model.dto.car;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Node<T> {
+public class PositionDTO {
 
-    private T data;
-    private Point point;
+    private double longitude;
+    private double latitude;
 
 }

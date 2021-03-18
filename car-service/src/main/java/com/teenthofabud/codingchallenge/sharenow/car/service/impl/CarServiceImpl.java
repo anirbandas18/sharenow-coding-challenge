@@ -93,6 +93,20 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    public Set<CarDetailsVO> retrieveAllCarsWithDetails() {
+        Set<CarDetailsVO> carVOList = new TreeSet<>();
+        Iterable<CarEntity> entityItr = this.repository.findAll();
+        for(CarEntity entity : entityItr) {
+            if(entity != null && StringUtils.hasText(entity.getVin())) {
+                CarDetailsVO vo = this.complexVOConverter.convert(entity);
+                carVOList.add(vo);
+            }
+        }
+        LOGGER.info("Found {} cars", carVOList.size());
+        return carVOList;
+    }
+
+    @Override
     public CarDetailsVO retrieveCarDetailsByVin(String vin) throws CarServiceException {
         if(StringUtils.hasText(vin)) {
             Optional<CarEntity> optEntity = this.repository.findById(vin);

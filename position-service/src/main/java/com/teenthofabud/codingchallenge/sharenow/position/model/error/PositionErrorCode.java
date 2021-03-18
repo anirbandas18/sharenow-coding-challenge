@@ -7,9 +7,10 @@ import lombok.ToString;
 @ToString
 public enum PositionErrorCode {
 
-    NOT_FOUND("SNCC-PLYS-001", 404),
-    INVALID_PARAMETER("SNCC-PLYS-002", 500),
-    SYSTEM_ERROR("SNCC-PLYS-003", 400);
+    NOT_FOUND("SNCC-POSS-001", 404),
+    INVALID_PARAMETER("SNCC-POSS-002", 400),
+    SYSTEM_ERROR("SNCC-POSS-003", 500),
+    UNEXPECTED_PARAMETER("SNCC-POSS-004", 500);
 
     @ToString.Include
     private int statusCode;
@@ -20,6 +21,5 @@ public enum PositionErrorCode {
         this.errorCode = errorCode;
         this.statusCode = statusCode;
     }
-
 
 }

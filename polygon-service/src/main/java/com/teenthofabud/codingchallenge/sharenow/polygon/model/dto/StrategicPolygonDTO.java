@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.geojson.GeoJsonObject;
+import org.geojson.Polygon;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -27,7 +28,7 @@ public class StrategicPolygonDTO implements Serializable {
     private String type;
     private List<GeoFeatureDTO> geoFeatures;
     private OptionsDTO options;
-    private GeoJsonObject geometry;
+    private Polygon geometry;
     private int version;
     @JsonProperty("$computed")
     private ComputedDTO computed;

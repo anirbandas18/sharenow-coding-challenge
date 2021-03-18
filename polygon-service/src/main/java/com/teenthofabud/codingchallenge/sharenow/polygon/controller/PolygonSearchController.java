@@ -36,8 +36,8 @@ public class PolygonSearchController {
     @GetMapping("cityid/{cityId}")
     public ResponseEntity<?> getAllPolygonsByCityId(@PathVariable String cityId) throws PolygonServiceException {
         LOGGER.info("Requesting all polygons with cityId: {}", cityId);
-        List<StrategicPolygonVO> voList = this.service.retrieveByCityId(cityId);
-        ResponseEntity<List<StrategicPolygonVO>> response = ResponseEntity.ok(voList);
+        List<StrategicPolygonDetailedVO> voList = this.service.retrieveByCityId(cityId);
+        ResponseEntity<List<StrategicPolygonDetailedVO>> response = ResponseEntity.ok(voList);
         LOGGER.info("Responding with all available polygons with cityId: {}", cityId);
         return response;
     }
@@ -45,8 +45,8 @@ public class PolygonSearchController {
     @GetMapping("type/{type}")
     public ResponseEntity<?> getAllPolygonsByType(@PathVariable String type) throws PolygonServiceException {
         LOGGER.info("Requesting all polygons of type: {}", type);
-        List<StrategicPolygonVO> voList = this.service.retrieveByType(type);
-        ResponseEntity<List<StrategicPolygonVO>> response = ResponseEntity.ok(voList);
+        List<StrategicPolygonDetailedVO> voList = this.service.retrieveByType(type);
+        ResponseEntity<List<StrategicPolygonDetailedVO>> response = ResponseEntity.ok(voList);
         LOGGER.info("Responding with all available polygons with type: {}", type);
         return response;
     }
@@ -54,8 +54,8 @@ public class PolygonSearchController {
     @GetMapping("name/{name}")
     public ResponseEntity<?> getPolygonByName(@PathVariable String name) throws PolygonServiceException {
         LOGGER.info("Requesting all polygons with name: {}", name);
-        List<StrategicPolygonVO> voList = this.service.retrieveByName(name);
-        ResponseEntity<List<StrategicPolygonVO>> response = ResponseEntity.ok(voList);
+        List<StrategicPolygonDetailedVO> voList = this.service.retrieveByName(name);
+        ResponseEntity<List<StrategicPolygonDetailedVO>> response = ResponseEntity.ok(voList);
         LOGGER.info("Responding with all available polygons with name: {}", name);
         return response;
     }

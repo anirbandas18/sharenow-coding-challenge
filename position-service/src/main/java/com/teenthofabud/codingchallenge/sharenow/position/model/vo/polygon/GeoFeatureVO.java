@@ -1,4 +1,4 @@
-package com.teenthofabud.codingchallenge.sharenow.polygon.model.vo;
+package com.teenthofabud.codingchallenge.sharenow.position.model.vo.polygon;
 
 
 import lombok.Getter;
