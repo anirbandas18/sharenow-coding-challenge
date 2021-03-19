@@ -14,10 +14,6 @@
     <packaging>jar</packaging>
     <name>configuration-service</name>
 
-    <properties>
-        <java.version>11</java.version>
-    </properties>
-
     <build>
         <finalName>configuration-app</finalName>
         <plugins>

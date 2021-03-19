@@ -14,7 +14,8 @@
     <name>polygon-service</name>
 
     <properties>
-        <java.version>11</java.version>
+        <springfox.version>3.0.0</springfox.version>
+        <jackson.geojson.version>1.14</jackson.geojson.version>
     </properties>
 
     <build>
@@ -56,12 +57,12 @@
         <dependency>
             <groupId>de.grundid.opendatalab</groupId>
             <artifactId>geojson-jackson</artifactId>
-            <version>1.14</version>
+            <version>${jackson.geojson.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
+            <version>${springfox.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
