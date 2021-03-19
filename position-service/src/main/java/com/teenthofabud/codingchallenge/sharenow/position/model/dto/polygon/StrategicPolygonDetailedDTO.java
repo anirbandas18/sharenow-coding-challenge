@@ -12,12 +12,14 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StrategicPolygonDetailedDTO /*extends StrategicPolygonDTO*/ {
+public class StrategicPolygonDetailedDTO {
 
 
+    @JsonProperty("_id")
     private String id;
     private Date updatedAt;
     private Date createdAt;
+    @JsonProperty("__v")
     private int v;
     private String name;
     private String cityId;
@@ -27,6 +29,7 @@ public class StrategicPolygonDetailedDTO /*extends StrategicPolygonDTO*/ {
     private List<GeoFeatureDTO> geoFeatures;
     private OptionsDTO options;
     private Polygon geometry;
+    @JsonProperty("$computed")
     private ComputedDTO computed;
     private List<TimedOptionsDTO> timedOptions;
 

@@ -54,7 +54,7 @@ public class PositionServiceImpl implements PositionService {
     private Converter<GeoFeatureDTO, GeoFeatureVO> geoFeatureDTO2VOConverter;
 
     @PostConstruct
-    private void init() {
+    public void init() {
         this.positionDTO2VOConverter = (dto) -> {
             PositionVO vo = new PositionVO();
             vo.setLatitude(dto.getLatitude());
@@ -118,8 +118,8 @@ public class PositionServiceImpl implements PositionService {
             List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonClient.getAllPolygons();
             if(polygonDTOList != null && !polygonDTOList.isEmpty()) {
                 LOGGER.info("Retrieved strategic polygons: {}", polygonDTOList.size());
-                for(StrategicPolygonDetailedDTO litePolygonDTO : polygonDTOList) {
-                    StrategicPolygonDetailedDTO detailedPolygonDTO = this.polygonClient.getPolygonDetailsById(litePolygonDTO.getId());
+                for(StrategicPolygonDetailedDTO detailedPolygonDTO : polygonDTOList) {
+                    //StrategicPolygonDetailedDTO detailedPolygonDTO = this.polygonClient.getPolygonDetailsById(litePolygonDTO.getId());
                     if(this.placementService.isCarInsidePolygon(carDetailsDTO, detailedPolygonDTO)) {
                         CarMappedVO carVO = this.carDetailsDTO2VOConverter.convert(carDetailsDTO);
                         StrategicPolygonMappedVO polygonVO = this.polygonDetailsDTO2VOConverter.convert(detailedPolygonDTO);
@@ -145,7 +145,7 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public StrategicPolygon2CarPositioningVO retrievePositionsOfCarsByPolygonById(String polygonId) throws PositionServiceException {
+    public StrategicPolygon2CarPositioningVO retrievePositionsOfAllCarsWithinPolygonByPolygonId(String polygonId) throws PositionServiceException {
         try {
             StrategicPolygon2CarPositioningVO posVO = new StrategicPolygon2CarPositioningVO();
             StrategicPolygonDetailedDTO polygonDTO = this.polygonClient.getPolygonDetailsById(polygonId);

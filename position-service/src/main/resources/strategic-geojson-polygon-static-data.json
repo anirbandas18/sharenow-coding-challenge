@@ -1,0 +1,403 @@
+[
+  {
+    "_id": "58a58bf685979b5415f3a39a",
+    "updatedAt": "2017-03-27T14:04:34.470Z",
+    "createdAt": "2017-02-16T11:24:38.375Z",
+    "__v": 0,
+    "name": "hauptbahnhof",
+    "cityId": "548876e13a9424d55af738b5",
+    "legacyId": "18_92",
+    "type": "relocationzone",
+    "geoFeatures": [
+      {
+        "name": "opticalCenter",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            0.0,
+            7.5
+          ]
+        }
+      },
+      {
+        "name": "center",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            0.0,
+            7.5
+          ]
+        }
+      }
+    ],
+    "options": {
+      "active": true,
+      "is_excluded": false,
+      "area": 0.4
+    },
+    "timedOptions": [
+      {
+        "key": "min",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "max",
+        "changesOverTime": [
+          [
+            0,
+            200
+          ]
+        ]
+      },
+      {
+        "key": "idle_time",
+        "changesOverTime": [
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      {
+        "key": "revenue",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "walking_range1",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "walking_range2",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            -5.0,
+            5.0
+          ],
+          [
+            -5.0,
+            10.0
+          ],
+          [
+            0.0,
+            15.0
+          ],
+          [
+            5.0,
+            10.0
+          ],
+          [
+            5.0,
+            5.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      ]
+    },
+    "version": 1,
+    "$computed": {
+      "activeTimedOptions": {
+        "min": 0,
+        "max": 200,
+        "idle_time": 2000,
+        "revenue": 0,
+        "walking_range1": 0,
+        "walking_range2": 0
+      }
+    }
+  },
+  {
+    "_id": "58a58bf6766d51540f779930",
+    "updatedAt": "2017-03-27T14:04:34.470Z",
+    "createdAt": "2017-02-16T11:24:38.385Z",
+    "__v": 0,
+    "name": "altbahnhof",
+    "cityId": "548876e13a9424d55af738b5",
+    "legacyId": "18_91",
+    "type": "relocationzone",
+    "geoFeatures": [
+      {
+        "name": "opticalCenter",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            25.0,
+            30.0
+          ]
+        }
+      },
+      {
+        "name": "center",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            25.0,
+            30.0
+          ]
+        }
+      }
+    ],
+    "options": {
+      "active": true,
+      "is_excluded": false,
+      "area": 0.4
+    },
+    "timedOptions": [
+      {
+        "key": "min",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "max",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "idle_time",
+        "changesOverTime": [
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      {
+        "key": "revenue",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "walking_range1",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "walking_range2",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            20.0,
+            30.0
+          ],
+          [
+            40.0,
+            30.0
+          ],
+          [
+            40.0,
+            20.0
+          ],
+          [
+            20.0,
+            20.0
+          ],
+          [
+            20.0,
+            30.0
+          ]
+        ]
+      ]
+    },
+    "version": 1,
+    "$computed": {
+      "activeTimedOptions": {
+        "min": 0,
+        "max": 0,
+        "idle_time": 2000,
+        "revenue": 0,
+        "walking_range1": 0,
+        "walking_range2": 0
+      }
+    }
+  },
+  {
+    "_id": "58a58bdb766d51540f7794e2",
+    "updatedAt": "2017-03-27T14:04:34.470Z",
+    "createdAt": "2017-02-16T11:24:38.385Z",
+    "__v": 0,
+    "name": "fishmarkt",
+    "cityId": "548876e13a9424d55af738b5",
+    "legacyId": "18_91",
+    "type": "relocationzone",
+    "geoFeatures": [
+      {
+        "name": "opticalCenter",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -25.0,
+            -30.0
+          ]
+        }
+      },
+      {
+        "name": "center",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -25.0,
+            -30.0
+          ]
+        }
+      }
+    ],
+    "options": {
+      "active": true,
+      "is_excluded": false,
+      "area": 0.4
+    },
+    "timedOptions": [
+      {
+        "key": "min",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "max",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "idle_time",
+        "changesOverTime": [
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      {
+        "key": "revenue",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "walking_range1",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "walking_range2",
+        "changesOverTime": [
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            -20.0,
+            -30.0
+          ],
+          [
+            -40.0,
+            -30.0
+          ],
+          [
+            -40.0,
+            -20.0
+          ],
+          [
+            -20.0,
+            -20.0
+          ],
+          [
+            -20.0,
+            -30.0
+          ]
+        ]
+      ]
+    },
+    "version": 1,
+    "$computed": {
+      "activeTimedOptions": {
+        "min": 0,
+        "max": 0,
+        "idle_time": 2000,
+        "revenue": 0,
+        "walking_range1": 0,
+        "walking_range2": 0
+      }
+    }
+  }
+]

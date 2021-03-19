@@ -1,12 +1,12 @@
 package com.teenthofabud.codingchallenge.sharenow.position.model.dto.car;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CarDetailsDTO {
 
     private int id;

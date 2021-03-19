@@ -13,6 +13,6 @@ public interface PositionService {
 
     public Car2StrategicPolygonPositioningVO retrievePositionOfCarAndItsEnclosingPolygonByVin(String vin) throws PositionServiceException;
 
-    public StrategicPolygon2CarPositioningVO retrievePositionsOfCarsByPolygonById(String polygonId) throws PositionServiceException;
+    public StrategicPolygon2CarPositioningVO retrievePositionsOfAllCarsWithinPolygonByPolygonId(String polygonId) throws PositionServiceException;
 
 }

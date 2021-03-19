@@ -6,16 +6,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class StrategicPolygon2CarPositioningVO {
 
-    private List<CarMappedVO> cars;
+    private Set<CarMappedVO> cars;
     private StrategicPolygonMappedVO polygon;
+
+    public StrategicPolygon2CarPositioningVO() {
+        this.cars = new TreeSet<>();
+        this.polygon = new StrategicPolygonMappedComplexVO();
+    }
+
+    public StrategicPolygon2CarPositioningVO(Set<CarMappedVO> cars, StrategicPolygonMappedVO polygon) {
+        this.cars = cars;
+        this.polygon = polygon;
+    }
 
     public void addCar(CarMappedVO carVO) {
         if(this.cars != null) {
@@ -29,6 +40,14 @@ public class StrategicPolygon2CarPositioningVO {
         } else {
             return false;
         }
+    }
+
+    public List<CarMappedVO> getCars() {
+        List<CarMappedVO> carMappedVOList = new ArrayList<>();
+        if(this.cars != null) {
+            carMappedVOList = new ArrayList<>(this.cars);
+        }
+        return carMappedVOList;
     }
 
 }

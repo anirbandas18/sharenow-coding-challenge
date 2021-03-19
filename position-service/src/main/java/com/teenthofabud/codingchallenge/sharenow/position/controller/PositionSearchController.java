@@ -34,7 +34,7 @@ public class PositionSearchController {
     @GetMapping("polygon/id/{id}")
     public ResponseEntity<?> getStrategicPolygonAndTheVehiclesItContains(@PathVariable String id) throws PositionServiceException {
         LOGGER.info("Determining all cars enclosed within the polygon by id");
-        StrategicPolygon2CarPositioningVO vo = this.service.retrievePositionsOfCarsByPolygonById(id);
+        StrategicPolygon2CarPositioningVO vo = this.service.retrievePositionsOfAllCarsWithinPolygonByPolygonId(id);
         ResponseEntity<StrategicPolygon2CarPositioningVO> response = ResponseEntity.ok(vo);
         LOGGER.info("Determined all cars enclosed within this polygon by its id");
         return response;
