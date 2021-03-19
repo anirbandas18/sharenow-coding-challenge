@@ -113,15 +113,15 @@ public class PositionServiceImpl implements PositionService {
         try {
             Car2StrategicPolygonPositioningVO posVO = new Car2StrategicPolygonPositioningVO();
             boolean found = false;
-            CarDetailsDTO carDTO = this.carClient.getCarDetailsByVin(vin);
+            CarDetailsDTO carDetailsDTO = this.carClient.getCarDetailsByVin(vin);
             LOGGER.info("Retrieved car details for vin: {}", vin);
             List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonClient.getAllPolygons();
             if(polygonDTOList != null && !polygonDTOList.isEmpty()) {
                 LOGGER.info("Retrieved strategic polygons: {}", polygonDTOList.size());
                 for(StrategicPolygonDetailedDTO litePolygonDTO : polygonDTOList) {
                     StrategicPolygonDetailedDTO detailedPolygonDTO = this.polygonClient.getPolygonDetailsById(litePolygonDTO.getId());
-                    if(this.placementService.isCarInsidePolygonConsiderOnlyOuterRing(carDTO, detailedPolygonDTO)) {
-                        CarMappedVO carVO = this.carDetailsDTO2VOConverter.convert(carDTO);
+                    if(this.placementService.isCarInsidePolygon(carDetailsDTO, detailedPolygonDTO)) {
+                        CarMappedVO carVO = this.carDetailsDTO2VOConverter.convert(carDetailsDTO);
                         StrategicPolygonMappedVO polygonVO = this.polygonDetailsDTO2VOConverter.convert(detailedPolygonDTO);
                         posVO.setCar(carVO);
                         posVO.setPolygon(polygonVO);
@@ -154,7 +154,7 @@ public class PositionServiceImpl implements PositionService {
             if(carDetailsDTOList != null && !carDetailsDTOList.isEmpty()) {
                 LOGGER.info("Retrieved cars: {}", carDetailsDTOList.size());
                 for(CarDetailsDTO carDetailsDTO : carDetailsDTOList) {
-                    if(this.placementService.isCarInsidePolygonConsiderOnlyOuterRing(carDetailsDTO, polygonDTO)) {
+                    if(this.placementService.isCarInsidePolygon(carDetailsDTO, polygonDTO)) {
                         CarMappedVO carVO = this.carDetailsDTO2VOConverter.convert(carDetailsDTO);
                         posVO.addCar(carVO);
                     }

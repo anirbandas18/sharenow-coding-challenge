@@ -1,14 +1,14 @@
 package com.teenthofabud.codingchallenge.sharenow.car.model.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class PositionEntity  implements Serializable {
 
     @ToString.Include

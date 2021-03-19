@@ -54,7 +54,7 @@ public class PolygonServiceImpl implements PolygonService {
 
 
     @PostConstruct
-    private void init() {
+    public void init() {
         this.activeTimedOptionsConverter = activeTimedOptionsConverter();
         this.geoFeatureConverter = geoFeatureConverter();
         this.optionsConverter = optionsConverter();

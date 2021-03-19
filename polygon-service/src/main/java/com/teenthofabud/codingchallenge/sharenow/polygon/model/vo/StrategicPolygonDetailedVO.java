@@ -1,6 +1,7 @@
 package com.teenthofabud.codingchallenge.sharenow.polygon.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,13 +15,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class StrategicPolygonDetailedVO implements Serializable {
 
-    @JsonProperty("_id")
     private String id;
     private Date updatedAt;
     private Date createdAt;
-    @JsonProperty("__v")
     private int v;
     private String name;
     private String cityId;
@@ -30,7 +30,6 @@ public class StrategicPolygonDetailedVO implements Serializable {
     private OptionsVO options;
     private Polygon geometry;
     private int version;
-    @JsonProperty("$computed")
     private ComputedVO computed;
     private List<TimedOptionsVO> timedOptions;
 

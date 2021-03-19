@@ -1,10 +1,6 @@
 package com.teenthofabud.codingchallenge.sharenow.polling.cleanup.configuration;
 
 import io.lettuce.core.RedisClient;
-import org.redisson.Redisson;
-import org.redisson.api.RedissonClient;
-import org.redisson.config.Config;
-import org.redisson.spring.data.connection.RedissonConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;

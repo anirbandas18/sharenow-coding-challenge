@@ -37,7 +37,7 @@ public class CarServiceImpl implements CarService {
     private Comparator<CarEntity> cmpCarByVin;
 
     @PostConstruct
-    private void init() {
+    public void init() {
         this.positionConverter = (entity) -> {
             PositionVO vo = new PositionVO();
             if(entity != null) {

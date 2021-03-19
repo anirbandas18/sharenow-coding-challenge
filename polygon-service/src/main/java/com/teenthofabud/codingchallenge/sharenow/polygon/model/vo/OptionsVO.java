@@ -13,7 +13,6 @@ import java.io.Serializable;
 public class OptionsVO implements Serializable {
 
     private boolean active;
-    @JsonProperty("is_excluded")
     private boolean isExcluded;
     private double area;
 

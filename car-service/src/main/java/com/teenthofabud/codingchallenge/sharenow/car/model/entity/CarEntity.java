@@ -16,6 +16,7 @@ import java.util.Date;
 @TypeAlias("Car")
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
 public class CarEntity implements Serializable {
 
     @Indexed

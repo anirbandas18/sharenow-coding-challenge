@@ -5,18 +5,19 @@ import com.teenthofabud.codingchallenge.sharenow.position.model.dto.car.Position
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.StrategicPolygonDetailedDTO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.error.PositionErrorCode;
 import com.teenthofabud.codingchallenge.sharenow.position.model.error.PositionServiceException;
-import com.teenthofabud.codingchallenge.sharenow.position.service.impl.PlacementServiceGFGImpl;
+import com.teenthofabud.codingchallenge.sharenow.position.service.impl.PlacementServiceJTSImpl;
 import org.geojson.LngLatAlt;
 import org.geojson.Polygon;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.GeometryFactory;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class PlacementServiceTests {
+public class PlacementServiceJTSTests {
 
     private static PlacementService SERVICE;
 
@@ -26,7 +27,7 @@ public class PlacementServiceTests {
 
     @BeforeAll
     public static void init() {
-        SERVICE = new PlacementServiceGFGImpl();
+        SERVICE = new PlacementServiceJTSImpl(new GeometryFactory());
         CAR = new CarDetailsDTO();
         STRATEGIC_POLYGON = new StrategicPolygonDetailedDTO();
     }
@@ -40,6 +41,7 @@ public class PlacementServiceTests {
                 new LngLatAlt(9.137248d, 48.790411d),
                 new LngLatAlt( 9.137248d, 48.790263d),
                 new LngLatAlt(9.13695d, 48.790263d),
+                new LngLatAlt(9.137248d, 48.790411d),
                 new LngLatAlt(9.137248d, 48.790411d));
         CAR.setPosition(carPosition);
         STRATEGIC_POLYGON.setGeometry(new Polygon(polygonCoordinates));
@@ -47,7 +49,7 @@ public class PlacementServiceTests {
 
         // act
         try {
-            actualResult = SERVICE.isCarInsidePolygonConsiderOnlyOuterRing(CAR, STRATEGIC_POLYGON);
+            actualResult = SERVICE.isCarInsidePolygon(CAR, STRATEGIC_POLYGON);
         } catch (PositionServiceException psex) {
             // consume exception because we know this data will not throw any exception
         }
@@ -61,15 +63,19 @@ public class PlacementServiceTests {
     public void testCarLies_OutsideTheStrategicPolygon() {
         // arrange
         PositionDTO carPosition = new PositionDTO(20.0d, 20.0d);
-        List<LngLatAlt> polygonCoordinates = Arrays.asList(new LngLatAlt(0.0d, 0.0d), new LngLatAlt(10.0d, 0.0d),
-                new LngLatAlt(10.0d, 10.0d), new LngLatAlt(0.0d, 10.0d));
+        List<LngLatAlt> polygonCoordinates = Arrays.asList(
+                new LngLatAlt(0.0d, 0.0d),
+                new LngLatAlt(10.0d, 0.0d),
+                new LngLatAlt(10.0d, 10.0d),
+                new LngLatAlt(0.0d, 10.0d),
+                new LngLatAlt(0.0d, 0.0d));
         CAR.setPosition(carPosition);
         STRATEGIC_POLYGON.setGeometry(new Polygon(polygonCoordinates));
         boolean actualResult = true;
 
         // act
         try {
-            actualResult = SERVICE.isCarInsidePolygonConsiderOnlyOuterRing(CAR, STRATEGIC_POLYGON);
+            actualResult = SERVICE.isCarInsidePolygon(CAR, STRATEGIC_POLYGON);
         } catch (PositionServiceException psex) {
             // consume exception because we know this data will not throw any exception
         }
@@ -83,15 +89,19 @@ public class PlacementServiceTests {
     public void testCarLies_ExactlyOnAnEdge_OfTheStrategicPolygon() {
         // arrange
         PositionDTO carPosition = new PositionDTO(5.0d, 0.0d);
-        List<LngLatAlt> polygonCoordinates = Arrays.asList(new LngLatAlt(0.0d, 0.0d), new LngLatAlt(10.0d, 0.0d),
-                new LngLatAlt(10.0d, 10.0d), new LngLatAlt(0.0d, 10.0d));
+        List<LngLatAlt> polygonCoordinates = Arrays.asList(
+                new LngLatAlt(0.0d, 0.0d),
+                new LngLatAlt(10.0d, 0.0d),
+                new LngLatAlt(10.0d, 10.0d),
+                new LngLatAlt(0.0d, 10.0d),
+                new LngLatAlt(0.0d, 0.0d));
         CAR.setPosition(carPosition);
         STRATEGIC_POLYGON.setGeometry(new Polygon(polygonCoordinates));
         boolean actualResult = false;
 
         // act
         try {
-            actualResult = SERVICE.isCarInsidePolygonConsiderOnlyOuterRing(CAR, STRATEGIC_POLYGON);
+            actualResult = SERVICE.isCarInsidePolygon(CAR, STRATEGIC_POLYGON);
         } catch (PositionServiceException psex) {
             // consume exception because we know this data will not throw any exception
         }
@@ -105,15 +115,19 @@ public class PlacementServiceTests {
     public void testCarLiesOutside_TheStrategicPolygon_ButIsCollinear_ToOneOfItsVertex() {
         // arrange
         PositionDTO carPosition = new PositionDTO(-5.0d, 5.0d);
-        List<LngLatAlt> polygonCoordinates = Arrays.asList(new LngLatAlt(0.0d, 0.0d), new LngLatAlt(10.0d, 0.0d),
-                new LngLatAlt(10.0d, 10.0d), new LngLatAlt(0.0d, 10.0d));
+        List<LngLatAlt> polygonCoordinates = Arrays.asList(
+                new LngLatAlt(0.0d, 0.0d),
+                new LngLatAlt(10.0d, 0.0d),
+                new LngLatAlt(10.0d, 10.0d),
+                new LngLatAlt(0.0d, 10.0d),
+                new LngLatAlt(0.0d, 0.0d));
         CAR.setPosition(carPosition);
         STRATEGIC_POLYGON.setGeometry(new Polygon(polygonCoordinates));
         boolean actualResult = true;
 
         // act
         try {
-            actualResult = SERVICE.isCarInsidePolygonConsiderOnlyOuterRing(CAR, STRATEGIC_POLYGON);
+            actualResult = SERVICE.isCarInsidePolygon(CAR, STRATEGIC_POLYGON);
         } catch (PositionServiceException psex) {
             // consume exception because we know this data will not throw any exception
         }
@@ -127,7 +141,9 @@ public class PlacementServiceTests {
     public void testReportError_IfStrategicPolygon_IsNotAPolygon_InNature() {
         // arrange
         PositionDTO carPosition = new PositionDTO(5.0d, 2.0d);
-        List<LngLatAlt> polygonCoordinates = Arrays.asList(new LngLatAlt(0.0d, 0.0d), new LngLatAlt(10.0d, 0.0d));
+        List<LngLatAlt> polygonCoordinates = Arrays.asList(
+                new LngLatAlt(0.0d, 0.0d),
+                new LngLatAlt(10.0d, 0.0d));
         CAR.setPosition(carPosition);
         STRATEGIC_POLYGON.setGeometry(new Polygon(polygonCoordinates));
         boolean actualResult = true;
@@ -142,7 +158,7 @@ public class PlacementServiceTests {
 
         // act
         try {
-            actualResult = SERVICE.isCarInsidePolygonConsiderOnlyOuterRing(CAR, STRATEGIC_POLYGON);
+            actualResult = SERVICE.isCarInsidePolygon(CAR, STRATEGIC_POLYGON);
         } catch (PositionServiceException psex) {
             actualErrorCode = psex.getError();
             actualMessage = psex.getMessage();

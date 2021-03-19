@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class PlacementServiceGFGImpl implements PlacementService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlacementServiceGFGImpl.class);
@@ -111,7 +110,7 @@ public class PlacementServiceGFGImpl implements PlacementService {
     }
 
     @Override
-    public boolean isCarInsidePolygonConsiderOnlyOuterRing(CarDetailsDTO carDTO, StrategicPolygonDetailedDTO polygonDTO) throws PositionServiceException {
+    public boolean isCarInsidePolygon(CarDetailsDTO carDTO, StrategicPolygonDetailedDTO polygonDTO) throws PositionServiceException {
         if(carDTO == null) {
             throw new PositionServiceException("Invalid car", PositionErrorCode.UNEXPECTED_PARAMETER, new Object[] {"car is null"});
         } else if(polygonDTO == null) {

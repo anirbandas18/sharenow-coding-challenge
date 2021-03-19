@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface PlacementService {
 
-    public boolean isCarInsidePolygonConsiderOnlyOuterRing(CarDetailsDTO carDTO, StrategicPolygonDetailedDTO polygonDTO) throws PositionServiceException;
+    public boolean isCarInsidePolygon(CarDetailsDTO carDTO, StrategicPolygonDetailedDTO polygonDTO) throws PositionServiceException;
 
 }

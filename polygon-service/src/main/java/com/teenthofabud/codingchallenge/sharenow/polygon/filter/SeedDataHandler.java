@@ -14,6 +14,9 @@ import com.teenthofabud.codingchallenge.sharenow.polygon.model.entity.StrategicP
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.entity.TimedOptionsEntity;
 import com.teenthofabud.codingchallenge.sharenow.polygon.model.error.PolygonServiceException;
 import com.teenthofabud.codingchallenge.sharenow.polygon.repository.PolygonRepository;
+import org.geojson.LngLatAlt;
+import org.geojson.Point;
+import org.geojson.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,11 +113,32 @@ public class SeedDataHandler implements ApplicationListener<ContextRefreshedEven
         };
     }
 
+    private Point correctInvertedPoint(Point invertedPoint) {
+        LngLatAlt invertedCoordinates = invertedPoint.getCoordinates();
+        LngLatAlt correctedCoordinates = new LngLatAlt(invertedCoordinates.getLatitude(), invertedCoordinates.getLongitude());
+        Point correctedPoint = new Point(correctedCoordinates);
+        return correctedPoint;
+    }
+
+    private Polygon correctInvertedPolygon(Polygon invertedPolygon) {
+        List<List<LngLatAlt>> invertedCoordinateCollections = invertedPolygon.getCoordinates();
+        List<LngLatAlt> correctedCoordinateCollections = new ArrayList<>();
+        for(List<LngLatAlt> invertedCollection : invertedCoordinateCollections) {
+            for(LngLatAlt invertedCoordinates : invertedCollection) {
+                LngLatAlt correctedCoordinates = new LngLatAlt(invertedCoordinates.getLatitude(), invertedCoordinates.getLongitude());
+                correctedCoordinateCollections.add(correctedCoordinates);
+            }
+        }
+        Polygon correctedPolygon = new Polygon(correctedCoordinateCollections);
+        return correctedPolygon;
+    }
+
     private Converter<GeoFeatureDTO, GeoFeatureEntity> geoFeatureConverter() {
         return (dto) -> {
             GeoFeatureEntity entity = new GeoFeatureEntity();
             if(dto != null) {
-                entity.setGeometry(dto.getGeometry()); // TODO: look into this
+                Point correctedPoint = correctInvertedPoint(dto.getGeometry());
+                entity.setGeometry(correctedPoint);
                 entity.setName(dto.getName());
             }
             return entity;
@@ -155,7 +179,8 @@ public class SeedDataHandler implements ApplicationListener<ContextRefreshedEven
                 entity.setComputed(computedConverter.convert(dto.getComputed()));
                 entity.setCreatedAt(dto.getCreatedAt());
                 entity.setId(dto.getId());
-                entity.setGeometry(dto.getGeometry());
+                Polygon correctedPolygon = correctInvertedPolygon(dto.getGeometry());
+                entity.setGeometry(correctedPolygon);
                 entity.setLegacyId(dto.getLegacyId());
                 entity.setName(dto.getName());
                 entity.setType(dto.getType());
