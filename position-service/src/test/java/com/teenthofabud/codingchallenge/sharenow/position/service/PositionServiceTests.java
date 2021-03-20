@@ -33,9 +33,9 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
 
@@ -95,7 +95,7 @@ public class PositionServiceTests {
         QA19OP32_DTO = new CarDetailsDTO(3, 10, "QA19OP32", "W-9988A", new PositionDTO(-50.0d, -30.0d), 0.1f, "RANGE-ROVER-DISCOVERY"); // outside all
         UI45AD08_DTO = new CarDetailsDTO(6, 10, "UI45AD08", "W-3321A", new PositionDTO(30.0d, 25.0d), 0.2f, "BMW-320i"); // inside 2nd
         YY87UI99_DTO = new CarDetailsDTO(9, 10, "YY87UI99", "W-5432Z", new PositionDTO(22.0d, 25.0d), 0.2f, "AUDI-Q3"); // inside 2nd
-        LIST_OF_CAR_DTOS = Arrays.asList(AB12XC34_DTO, XZ67BO38_DTO, QA19OP32_DTO, UI45AD08_DTO, YY87UI99_DTO);
+        LIST_OF_CAR_DTOS = Stream.of(AB12XC34_DTO, XZ67BO38_DTO, QA19OP32_DTO, UI45AD08_DTO, YY87UI99_DTO).collect(Collectors.toCollection(ArrayList::new));
         AB12XC34_VO = new CarMappedVO("AB12XC34", "MERCEDES-C320", "W-9876A", new PositionVO(2.0d, 6.0d));
         XZ67BO38_VO = new CarMappedVO("XZ67BO38", "JAGUAR-XF", "W-9877A", new PositionVO(-5.0d, 7.5d));
         QA19OP32_VO = new CarMappedVO("QA19OP32", "RANGE-ROVER-DISCOVERY", "W-9988A", new PositionVO(-30.0d, -50.0d));
@@ -268,6 +268,60 @@ public class PositionServiceTests {
         Assert.assertEquals(expectedVO.getPolygon().getId(), actualVO.getPolygon().getId());
         Assert.assertEquals(expectedVO.getPolygon().getName(), actualVO.getPolygon().getName());
         Assert.assertEquals(expectedVO.getPolygon().getType(), actualVO.getPolygon().getType());
+    }
+
+    @Test
+    @DisplayName("Test position of all within a strategic polygon by its name")
+    public void testPosition_OfAllCars_WithinA_StrategicPolygon_ByItsName() throws PositionServiceException {
+        // arrange
+        String name = "bahnhof";
+        when(polygonClient.getAllPolygonsByName(name)).thenReturn(Stream.of(
+                HAUPTBAHNHOF_AREA_DTO, ALTBAHNHOF_AREA_DTO).collect(Collectors.toCollection(ArrayList::new)));
+        when(carClient.getAllCarsWithDetails()).thenReturn(LIST_OF_CAR_DTOS);
+        when(placementService.isCarInsidePolygon(UI45AD08_DTO, HAUPTBAHNHOF_AREA_DTO)).thenReturn(false);
+        when(placementService.isCarInsidePolygon(YY87UI99_DTO, HAUPTBAHNHOF_AREA_DTO)).thenReturn(false);
+        when(placementService.isCarInsidePolygon(AB12XC34_DTO, HAUPTBAHNHOF_AREA_DTO)).thenReturn(true);
+        when(placementService.isCarInsidePolygon(XZ67BO38_DTO, HAUPTBAHNHOF_AREA_DTO)).thenReturn(true);
+        when(placementService.isCarInsidePolygon(QA19OP32_DTO, HAUPTBAHNHOF_AREA_DTO)).thenReturn(false);
+        when(placementService.isCarInsidePolygon(UI45AD08_DTO, ALTBAHNHOF_AREA_DTO)).thenReturn(true);
+        when(placementService.isCarInsidePolygon(YY87UI99_DTO, ALTBAHNHOF_AREA_DTO)).thenReturn(true);
+        when(placementService.isCarInsidePolygon(AB12XC34_DTO, ALTBAHNHOF_AREA_DTO)).thenReturn(false);
+        when(placementService.isCarInsidePolygon(XZ67BO38_DTO, ALTBAHNHOF_AREA_DTO)).thenReturn(false);
+        when(placementService.isCarInsidePolygon(QA19OP32_DTO, ALTBAHNHOF_AREA_DTO)).thenReturn(false);
+        Set<StrategicPolygon2CarPositioningVO> expectedVOSet = new TreeSet<>();
+        StrategicPolygon2CarPositioningVO expectedVO1 = new StrategicPolygon2CarPositioningVO();
+        expectedVO1.addCar(AB12XC34_VO);
+        expectedVO1.addCar(XZ67BO38_VO);
+        expectedVO1.setPolygon(HAUPTBAHNHOF_AREA_VO);
+        expectedVOSet.add(expectedVO1);
+        StrategicPolygon2CarPositioningVO expectedVO2 = new StrategicPolygon2CarPositioningVO();
+        expectedVO2.addCar(UI45AD08_VO);
+        expectedVO2.addCar(YY87UI99_VO);
+        expectedVO2.setPolygon(ALTBAHNHOF_AREA_VO);
+        expectedVOSet.add(expectedVO2);
+        Set<StrategicPolygon2CarPositioningVO> actualVOSet = new TreeSet<>();
+
+        // act
+        try {
+            actualVOSet = service.retrievePositionsOfAllCarsWithinPolygonByPolygonName(name);
+        } catch (PositionServiceException psex) {
+            // consuming exception because we know that this data won't cause any errors
+        }
+        List<StrategicPolygon2CarPositioningVO> expectedVOList = new ArrayList<>(expectedVOSet);
+        List<StrategicPolygon2CarPositioningVO> actualVOList = new ArrayList<>(actualVOSet);
+
+        //assert
+
+        Assert.assertEquals(false, actualVOList.isEmpty());
+        Assert.assertEquals(2, actualVOList.size());
+
+        Assert.assertEquals(expectedVOList.get(0).getCars().get(0).getVin(), actualVOList.get(0).getCars().get(0).getVin());
+        Assert.assertEquals(expectedVOList.get(0).getCars().get(1).getVin(), actualVOList.get(0).getCars().get(1).getVin());
+        Assert.assertEquals(expectedVOList.get(0).getPolygon().getId(), actualVOList.get(0).getPolygon().getId());
+
+        Assert.assertEquals(expectedVOList.get(1).getCars().get(0).getVin(), actualVOList.get(1).getCars().get(0).getVin());
+        Assert.assertEquals(expectedVOList.get(1).getCars().get(1).getVin(), actualVOList.get(1).getCars().get(1).getVin());
+        Assert.assertEquals(expectedVOList.get(1).getPolygon().getId(), actualVOList.get(1).getPolygon().getId());
     }
 
     @Test

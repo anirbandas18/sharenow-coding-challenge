@@ -1,5 +1,6 @@
 package com.teenthofabud.codingchallenge.sharenow.position.service.impl;
 
+import com.ctc.wstx.sw.EncodingXmlWriter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.car.CarDetailsDTO;
@@ -27,8 +28,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -119,7 +119,6 @@ public class PositionServiceImpl implements PositionService {
             if(polygonDTOList != null && !polygonDTOList.isEmpty()) {
                 LOGGER.info("Retrieved strategic polygons: {}", polygonDTOList.size());
                 for(StrategicPolygonDetailedDTO detailedPolygonDTO : polygonDTOList) {
-                    //StrategicPolygonDetailedDTO detailedPolygonDTO = this.polygonClient.getPolygonDetailsById(litePolygonDTO.getId());
                     if(this.placementService.isCarInsidePolygon(carDetailsDTO, detailedPolygonDTO)) {
                         CarMappedVO carVO = this.carDetailsDTO2VOConverter.convert(carDetailsDTO);
                         StrategicPolygonMappedVO polygonVO = this.polygonDetailsDTO2VOConverter.convert(detailedPolygonDTO);
@@ -173,6 +172,53 @@ public class PositionServiceImpl implements PositionService {
             }
         } catch (FeignException e) {
             throw this.parseFeignErrorResponse(e);
+        }
+    }
+
+    @Override
+    public Set<StrategicPolygon2CarPositioningVO> retrievePositionsOfAllCarsWithinPolygonByPolygonName(String name) throws PositionServiceException {
+        Set<StrategicPolygon2CarPositioningVO> posVOList = new TreeSet<>();
+        try {
+            List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonClient.getAllPolygonsByName(name);
+            LOGGER.info("Retrieved strategic polygon details for name: {}", name);
+            List<CarDetailsDTO> carDetailsDTOList = this.carClient.getAllCarsWithDetails();
+            if((carDetailsDTOList != null && !carDetailsDTOList.isEmpty()) &&
+                    (polygonDTOList != null && !polygonDTOList.isEmpty())){
+                LOGGER.info("Retrieved cars: {}", carDetailsDTOList.size());
+                boolean atleast1CarFound = false;
+                for(StrategicPolygonDetailedDTO polygonDetailedDTO : polygonDTOList) {
+                    StrategicPolygon2CarPositioningVO posVO = new StrategicPolygon2CarPositioningVO();
+                    List<CarDetailsDTO> auxCarDetailsDTOList = new ArrayList<>();
+                    for(CarDetailsDTO carDetailsDTO : carDetailsDTOList) {
+                        if(this.placementService.isCarInsidePolygon(carDetailsDTO, polygonDetailedDTO)) {
+                            CarMappedVO carVO = this.carDetailsDTO2VOConverter.convert(carDetailsDTO);
+                            posVO.addCar(carVO);
+                            atleast1CarFound = true;
+                            auxCarDetailsDTOList.add(carDetailsDTO);
+                        }
+                    }
+                    carDetailsDTOList.removeAll(auxCarDetailsDTOList);
+                    StrategicPolygonMappedVO polygonVO = this.polygonDetailsDTO2VOConverter.convert(polygonDetailedDTO);
+                    posVO.setPolygon(polygonVO);
+                    LOGGER.info("Added {} cars to polygon with name {}", posVO.getCars().size(), polygonDetailedDTO.getName());
+                    posVOList.add(posVO);
+                }
+                if(!atleast1CarFound) {
+                    LOGGER.error("No cars could be placed in polygon with name {}", name);
+                    throw new PositionServiceException("No cars available", PositionErrorCode.NOT_FOUND, new Object[] {"cars", "are"});
+                }
+            } else if(polygonDTOList == null || polygonDTOList.isEmpty()) {
+                throw new PositionServiceException("No polygons available", PositionErrorCode.NOT_FOUND, new Object[] {"polygons", "are"});
+            } else if(carDetailsDTOList == null || carDetailsDTOList.isEmpty()) {
+                throw new PositionServiceException("No cars available", PositionErrorCode.NOT_FOUND, new Object[] {"cars", "are"});
+            }
+        } catch (FeignException e) {
+            throw this.parseFeignErrorResponse(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            return posVOList;
         }
     }
 

@@ -14,9 +14,6 @@ public interface PolygonServiceClient {
     @GetMapping("/search")
     public List<StrategicPolygonDetailedDTO> getAllPolygons();
 
-    @GetMapping("/search/cityid/{cityId}")
-    public List<StrategicPolygonDetailedDTO> getAllPolygonsByCityId(@PathVariable String cityId);
-
     @GetMapping("/search/name/{name}")
     public List<StrategicPolygonDetailedDTO> getAllPolygonsByName(@PathVariable String name);
 

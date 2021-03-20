@@ -7,7 +7,7 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarDetailsDTO {
+public class CarDetailsDTO implements Comparable<CarDetailsDTO> {
 
     private int id;
     private int locationId;
@@ -18,4 +18,8 @@ public class CarDetailsDTO {
     private float fuel;
     private String model;
 
+    @Override
+    public int compareTo(CarDetailsDTO o) {
+        return this.vin.compareTo(o.getVin());
+    }
 }

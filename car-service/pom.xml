@@ -15,7 +15,7 @@
     <name>car-service</name>
 
     <properties>
-        <springfox.version>3.0.0</springfox.version>
+        <springdoc.version>1.5.2</springdoc.version>
     </properties>
 
     <build>
@@ -58,9 +58,9 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

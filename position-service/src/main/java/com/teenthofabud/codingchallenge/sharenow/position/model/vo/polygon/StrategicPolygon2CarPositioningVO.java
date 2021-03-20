@@ -1,10 +1,7 @@
 package com.teenthofabud.codingchallenge.sharenow.position.model.vo.polygon;
 
 import com.teenthofabud.codingchallenge.sharenow.position.model.vo.car.CarMappedVO;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +10,7 @@ import java.util.TreeSet;
 
 @Getter
 @Setter
-public class StrategicPolygon2CarPositioningVO {
+public class StrategicPolygon2CarPositioningVO implements Comparable<StrategicPolygon2CarPositioningVO>{
 
     private Set<CarMappedVO> cars;
     private StrategicPolygonMappedVO polygon;
@@ -50,4 +47,8 @@ public class StrategicPolygon2CarPositioningVO {
         return carMappedVOList;
     }
 
+    @Override
+    public int compareTo(StrategicPolygon2CarPositioningVO o) {
+        return this.polygon.getId().compareTo(o.getPolygon().getId());
+    }
 }

@@ -1,4 +1,9 @@
-SHARE NOW - JAVA CODING CHALLENGE
+# SHARE NOW - JAVA CODING CHALLENGE
+
+---
+### PREFACE
+I had a lot of fun in completing this challenge because of the wide variety of topics that it covers ranging from architecture to system design to data analysis and modelling to performance and deploymemts. It was indeed a pleasure for me to have been offered this challenge as it tested my limits, knowledge, and skills.
+
 ---
 ### TECHNOLOGY STACK
 | Technology | Implementations/Frameworks | Version | Purpose |
@@ -14,6 +19,7 @@ SHARE NOW - JAVA CODING CHALLENGE
 | NoSQL | MongoDB | 4.4 | Data store for nested schema |
 | Virtualization | Docker | 20.10.5 | Platform agnostic containerization |
 | OpenAPI | Swagger | 2 | REST API Documentation |
+
 ---
 ### MINIMUM SYSTEM REQUIREMENTS
 1. Disk - 4 GB
@@ -25,6 +31,7 @@ SHARE NOW - JAVA CODING CHALLENGE
 7. Maven - 3.6.x
 8. Docker - 20.10.x
 9. Docker Compose - 1.28.x
+
 ---
 ### STEPS TO RUN
 1. Open terminal or command prompt
@@ -32,15 +39,18 @@ SHARE NOW - JAVA CODING CHALLENGE
 3. Execute `mvn clean package -e` at the root folder containing all the projects to download dependencies, build the artifacts and create respective docker images
 4. Execute `docker-compose up` at the root folder containing all the projects to start the entire microservice ecosystem
 5. Browse to `http://<HOST_SYSTEM-IP>:8761` in a browser to see if the all the services are available in EUREKA server or not
-6. Access the Swagger documentation of individual core microservices viz., car, polygon, position to execute requests as desired over `http://<HOST-SYSTEM-IP>:8081/<SERVICE-NAME>/<SERVICE-CONTEXT-PATH>/swagger-ui/`
+6. Access the Swagger documentation of individual core microservices viz., car, polygon, position in a browser to execute requests as desired over `http://<HOST-SYSTEM-IP>:8081/<SERVICE-NAME>/<SERVICE-CONTEXT-PATH>/swagger-ui.html`
+
 ---
 ### ARCHITECTURE
 [Click here to see](https://i.ibb.co/R0dzhpT/sharenow-coding-challenge-architecture.png)
 ![Click here to see](./scripts/sharenow-coding-challenge-architecture.png)
+
 ---
 ### FEATURES
 1. Search for a car by its VIN and receive the strategic polygon details that it is currently present at
 1. Search for a strategic polygon by its id or name and receive all the cars that it contains
+
 ---
 ### PROJECT DESCRIPTION
 | SERVICE NAME | FUNCTIONALITY | TYPE |
@@ -56,6 +66,7 @@ SHARE NOW - JAVA CODING CHALLENGE
 | documentdb-store | Stores strategic polygons for Stuttgart and their details | Docker Image 
 | tracing-service | Trace requests across microservices for debugging | Docker Image 
 | car2godeveloper-service | Provides live locations of cars in Stuttgart | Docker Image |
+
 ---
 ### ASSUMPTIONS
 1. All business logic is written specifically for Stuttgart
@@ -64,34 +75,47 @@ SHARE NOW - JAVA CODING CHALLENGE
 4. polling-service is expected to be a daemon service that is concerned with writing to a data store only, hence it doesn't need horizontal scaling but rather vertical scaling if at all required to be more performant
 5. JAVA_HOME and MAVEN_HOME is set on the host system
 6. car2godeveloper/api-for-coding-challenge has been treated as a black box with only documentation available to use it as required
+
 ---
-### DECISIONS
+### FUNCTIONAL DECISIONS
 1. Cars can be queried either by their VIN or all the ones currently available at once
 2. Strategic polygons can be queried by their id or name or all available ones at once
 3. A car that is not within any of the strategic polygon will be deemed as unavailable
 4. A strategic polygon will report no cars available if it can't place any car within itself at any given point in time
-5. All other services except for polling-service should scale horizontally to keep up with dynamic load in favour of being high performant
-6. Swagger has only been enabled for services that define the core business logic viz., car, polygon, position
-7. Unit tests have been written to assert the business logic of core microservices viz., car, polygon, position 
-8. polling-service is intended to be write intrinsic while car-service is intended to be read intrinsic through a distributed workflow spanning across two microservices and integrated using a cache (redis). This has been done to avoid bottle-neck and any single point of failure.
+
+---
+### TECHNICAL DECISIONS
+1. All other services except for polling-service should scale horizontally to keep up with dynamic load in favour of being high performant
+2. Swagger has only been enabled for services that define the core business logic viz., car, polygon, position
+3. Unit tests have been written to assert the business logic of core microservices viz., car, polygon, position 
+4. polling-service is intended to be write intrinsic while car-service is intended to be read intrinsic through a distributed workflow spanning across two microservices and integrated using a cache (redis). This has been done to avoid bottle-neck and any single point of failure.
+5. Each microservice is a spring boot application following the pattern of controller, service and repository, where repository can be either a database or an external service as per the respective microservice's use case
+6. Scheduled service follows the pattern of input, process, and output like batch jobs
+7. Functional interfaces have been defined in each microservice to perform one off business logic
+8. All business specific exceptions are checked exceptions having a custom message and an enum based error code which in turn contains a prdefined application specific error code in the format `SNCC-<INITIALS-OF-SERVICE-NAME>-<INCREMENTING-NUMBER>` and its corresponding HTTP Status code
+8. Each microservice has a REST webservice error handler that catches any business specific exception to translate them into appropriate error messages and HTTP status codes
+9. Sleuth and Zipkin has been added to each of the core microservices for the purpose of tracing distributed requests across multiple microservices
+
 ---
 ### REST API DOCUMENTATION
 | SERVICE-NAME | API DOCUMENTATION URL |
 | ----------- | ----------- |
-| car-service | http://<GATWAY-SERVICE-IP>:8081/car-service/car/swagger-ui/) |
-| polygon-service | http://<GATWAY-SERVICE-IP>:8081/polygon-service/polygon/swagger-ui/) |
-| position-service | http://<GATWAY-SERVICE-IP>:8081/position-service/position/swagger-ui/) |
+| car-service | http://<GATEWAY-SERVICE-IP>:8081/car-service/car/swagger-ui.html) |
+| polygon-service | http://<GATEWAY-SERVICE-IP>:8081/polygon-service/polygon/swagger-ui.html) |
+| position-service | http://<GATEWAY-SERVICE-IP>:8081/position-service/position/swagger-ui.html) |
+
 ---
 ### ISSUES/ENHANCEMENTS
-1. Implement custom health indicators
-2. Enforce strict depends on strategy in docker-compose during container creation using custom service health checks for graceful startup
-3. Implement circuit breaker
-4. Implement strategic polygon search by name for positioning
-5. Implement file system configuration store
-6. Enable security on all microservices
-7. Enable authentication of cache and document database
-8. Encrypt security credentials in configuration store
-9. Redis should be configured for master-slave where master is write concern and all slaves are read concerns with eventual consistency between them 
+1.  Implement custom health indicators
+2.  Enforce strict depends on strategy in docker-compose during container creation using custom service health checks for graceful startup
+3.  Define error codes in Swagger documentation
+4.  Implement circuit breaker
+5.  Implement file system configuration store
+6.  Enable security on all microservices
+7.  Enable authentication of cache and document database
+8.  Encrypt security credentials in configuration store
+9.  Redis should be configured for master-slave where master is write concern and all slaves are read concerns with eventual consistency between them 
+
 ---
 ### ADDITIONAL RESOURCES
 In the `scripts` folder under the root folder `sharenow-coding-challenge` you will find the postman collection corresponding to all the REST APIS defined for each microservice in this entire project. You can use it as well if needed.
