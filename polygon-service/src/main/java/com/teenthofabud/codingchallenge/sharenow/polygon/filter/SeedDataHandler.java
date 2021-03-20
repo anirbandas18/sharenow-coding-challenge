@@ -113,32 +113,11 @@ public class SeedDataHandler implements ApplicationListener<ContextRefreshedEven
         };
     }
 
-    private Point correctInvertedPoint(Point invertedPoint) {
-        LngLatAlt invertedCoordinates = invertedPoint.getCoordinates();
-        LngLatAlt correctedCoordinates = new LngLatAlt(invertedCoordinates.getLatitude(), invertedCoordinates.getLongitude());
-        Point correctedPoint = new Point(correctedCoordinates);
-        return correctedPoint;
-    }
-
-    private Polygon correctInvertedPolygon(Polygon invertedPolygon) {
-        List<List<LngLatAlt>> invertedCoordinateCollections = invertedPolygon.getCoordinates();
-        List<LngLatAlt> correctedCoordinateCollections = new ArrayList<>();
-        for(List<LngLatAlt> invertedCollection : invertedCoordinateCollections) {
-            for(LngLatAlt invertedCoordinates : invertedCollection) {
-                LngLatAlt correctedCoordinates = new LngLatAlt(invertedCoordinates.getLatitude(), invertedCoordinates.getLongitude());
-                correctedCoordinateCollections.add(correctedCoordinates);
-            }
-        }
-        Polygon correctedPolygon = new Polygon(correctedCoordinateCollections);
-        return correctedPolygon;
-    }
-
     private Converter<GeoFeatureDTO, GeoFeatureEntity> geoFeatureConverter() {
         return (dto) -> {
             GeoFeatureEntity entity = new GeoFeatureEntity();
             if(dto != null) {
-                Point correctedPoint = correctInvertedPoint(dto.getGeometry());
-                entity.setGeometry(correctedPoint);
+                entity.setGeometry(dto.getGeometry());
                 entity.setName(dto.getName());
             }
             return entity;
@@ -179,8 +158,7 @@ public class SeedDataHandler implements ApplicationListener<ContextRefreshedEven
                 entity.setComputed(computedConverter.convert(dto.getComputed()));
                 entity.setCreatedAt(dto.getCreatedAt());
                 entity.setId(dto.getId());
-                Polygon correctedPolygon = correctInvertedPolygon(dto.getGeometry());
-                entity.setGeometry(correctedPolygon);
+                entity.setGeometry(dto.getGeometry());
                 entity.setLegacyId(dto.getLegacyId());
                 entity.setName(dto.getName());
                 entity.setType(dto.getType());

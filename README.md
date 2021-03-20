@@ -2,7 +2,7 @@
 
 ---
 ### PREFACE
-I had a lot of fun in completing this challenge because of the wide variety of topics that it covers ranging from architecture to system design to data analysis and modelling to performance and deploymemts. It was indeed a pleasure for me to have been offered this challenge as it tested my limits, knowledge, and skills.
+I had a lot of fun in completing this challenge because of the wide variety of topics that it covers ranging from architecture to system design to data analysis and modelling to performance and deploymemts. It was indeed a pleasure for me to have been offered this challenge as it tested my limits, knowledge, and skills while giving me an idea on the kind of work that sharenow does.
 
 ---
 ### TECHNOLOGY STACK
@@ -108,8 +108,7 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 ### ISSUES/ENHANCEMENTS
 1.  Implement custom health indicators
 2.  Enforce strict depends on strategy in docker-compose during container creation using custom service health checks for graceful startup
-3.  Define error codes in Swagger documentation
-4.  Implement circuit breaker
+3.  Implement circuit breaker
 5.  Implement file system configuration store
 6.  Enable security on all microservices
 7.  Enable authentication of cache and document database
