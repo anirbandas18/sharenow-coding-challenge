@@ -238,9 +238,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localhost}}:8081/car-service/car/search",
+									"raw": "{{virtual-host}}:8081/car-service/car/search",
 									"host": [
-										"{{localhost}}"
+										"{{virtual-host}}"
 									],
 									"port": "8081",
 									"path": [
@@ -258,9 +258,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localhost}}:8081/polygon-service/polygon/search",
+									"raw": "{{virtual-host}}:8081/polygon-service/polygon/search",
 									"host": [
-										"{{localhost}}"
+										"{{virtual-host}}"
 									],
 									"port": "8081",
 									"path": [
@@ -278,9 +278,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localhost}}:8081/polygon-service/polygon/search/id/58a58c0585979b5415f3a61a",
+									"raw": "{{virtual-host}}:8081/polygon-service/polygon/search/id/58a58bf685979b5415f3a39a",
 									"host": [
-										"{{localhost}}"
+										"{{virtual-host}}"
 									],
 									"port": "8081",
 									"path": [
@@ -288,7 +288,7 @@
 										"polygon",
 										"search",
 										"id",
-										"58a58c0585979b5415f3a61a"
+										"58a58bf685979b5415f3a39a"
 									]
 								}
 							},
@@ -300,9 +300,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localhost}}:8081/car-service/car/search/vin/1G1AM55B184S0ZWDX",
+									"raw": "{{virtual-host}}:8081/car-service/car/search/vin/1FMYU70K72ZTSYCXX",
 									"host": [
-										"{{localhost}}"
+										"{{virtual-host}}"
 									],
 									"port": "8081",
 									"path": [
@@ -310,7 +310,7 @@
 										"car",
 										"search",
 										"vin",
-										"1G1AM55B184S0ZWDX"
+										"1FMYU70K72ZTSYCXX"
 									]
 								}
 							},
@@ -322,9 +322,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localhost}}:8081/position-service/position/search/car/vin/2GCJK83U63A25SA7W",
+									"raw": "{{virtual-host}}:8081/position-service/position/search/car/vin/2GCEK333694L4MHNH",
 									"host": [
-										"{{localhost}}"
+										"{{virtual-host}}"
 									],
 									"port": "8081",
 									"path": [
@@ -333,7 +333,7 @@
 										"search",
 										"car",
 										"vin",
-										"2GCJK83U63A25SA7W"
+										"2GCEK333694L4MHNH"
 									]
 								}
 							},
@@ -345,9 +345,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{localhost}}:8081/position-service/position/search/polygon/id/58a58c0585979b5415f3a618",
+									"raw": "{{virtual-host}}:8081/position-service/position/search/polygon/id/58a58bd1766d51540f779340",
 									"host": [
-										"{{localhost}}"
+										"{{virtual-host}}"
 									],
 									"port": "8081",
 									"path": [
@@ -356,7 +356,30 @@
 										"search",
 										"polygon",
 										"id",
-										"58a58c0585979b5415f3a618"
+										"58a58bd1766d51540f779340"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get polygons matching the name alogn with the cars that they contain via gateway",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{virtual-host}}:8081/position-service/position/search/polygon/name/107",
+									"host": [
+										"{{virtual-host}}"
+									],
+									"port": "8081",
+									"path": [
+										"position-service",
+										"position",
+										"search",
+										"polygon",
+										"name",
+										"107"
 									]
 								}
 							},

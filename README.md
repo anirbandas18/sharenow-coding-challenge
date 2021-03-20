@@ -2,7 +2,7 @@
 
 ---
 ### PREFACE
-I had a lot of fun in completing this challenge because of the wide variety of topics that it covers ranging from architecture to system design to data analysis and modelling to performance and deploymemts. It was indeed a pleasure for me to have been offered this challenge as it tested my limits, knowledge, and skills while giving me an idea on the kind of work that sharenow does.
+I had a lot of fun in completing this challenge because of the wide variety of topics that it covers ranging from architecture to system design to data analysis and modelling to considering performance and automating deployments. It was indeed a pleasure for me to have been offered this challenge as it tested my knowledge, and skills while giving me an idea on the kind of work that sharenow does.
 
 ---
 ### TECHNOLOGY STACK
@@ -22,24 +22,38 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 
 ---
 ### MINIMUM SYSTEM REQUIREMENTS
-1. Disk - 4 GB
-2. Memory - 3 GB
-3. Processor - 2 CPU
-4. Network - 80 MBps
-5. Operating System - Ubuntu 20.4 or Windows 10
-6. JDK - 11
-7. Maven - 3.6.x
-8. Docker - 20.10.x
-9. Docker Compose - 1.28.x
+1.  Disk - 4 GB
+2.  Memory - 4 GB
+3.  Processor - 2 CPU
+4.  Network - 80 MBps
+5.  Operating System - Ubuntu 20.4 or Windows 10
+6.  JDK - 11
+7.  Python - 3.9
+8.  Maven - 3.6.x
+9.  Docker - 20.10.x
+10. Docker Compose - 1.28.x
 
 ---
-### STEPS TO RUN
-1. Open terminal or command prompt
-2. Move to the root folder containing all the projects (source code for services) viz., `sharenow-coding-challenge`
-3. Execute `mvn clean package -e` at the root folder containing all the projects to download dependencies, build the artifacts and create respective docker images
-4. Execute `docker-compose up` at the root folder containing all the projects to start the entire microservice ecosystem
-5. Browse to `http://<HOST_SYSTEM-IP>:8761` in a browser to see if the all the services are available in EUREKA server or not
-6. Access the Swagger documentation of individual core microservices viz., car, polygon, position in a browser to execute requests as desired over `http://<HOST-SYSTEM-IP>:8081/<SERVICE-NAME>/<SERVICE-CONTEXT-PATH>/swagger-ui.html`
+### STEPS TO RUN - MANUALLY
+1.  Open terminal or command prompt
+2.  Go to the root folder of the project `sharenow-coding-challenge` containing the source code for all services
+3.  Execute `mvn clean package -e` at the root folder containing all the projects to download dependencies, build the artifacts and create docker images of the respective services
+4.  Execute `docker-compose -f docker-compose.infrastructure.yml up` at the root folder containing all the projects to start the infrastructure services for the microservice ecosystem
+5.  If prompted for `Continue with the new image? [yN]` during the docker-compose step, enter y
+6.  Browse to `http://<HOST_SYSTEM-IP>:8761` or `http://localhost:8761` or `http://172.27.0.6:8761` in a browser to see if EUREKA server is up or not
+7.  Browse to `http://<HOST_SYSTEM-IP>:8888/actuator/info` or `http://localhost:8761/actuator/info` or `http://172.27.0.6:8761/actuator/info` in a browser to see if configuration  server is up or not which is denoted by a blank page and no errors
+8.  Wait for EUREKA and configuration server to become healthy
+9.  Execute `docker-compose -f docker-compose.core.yml up` at the root folder containing all the projects to start the core microservices
+6.  If prompted for `Continue with the new image? [yN]` during the docker-compose step, enter y
+7.  Browse to `http://<HOST_SYSTEM-IP>:8761` or `http://localhost:8761` or `http://172.27.0.6:8761` in a browser to see if the all the services are available in EUREKA server or not
+8.  Access the Swagger documentation of individual core microservices viz., car, polygon, position in a browser to execute requests as desired over `http://<HOST-SYSTEM-IP>:8081/<SERVICE-NAME>/<SERVICE-CONTEXT-PATH>/swagger-ui.html`
+
+---
+### STEPS TO STOP - MANUALLY
+1.  Open terminal or command prompt
+2.  Go to the root folder of the project `sharenow-coding-challenge` containing the source code for all services
+3.  Execute `docker-compose -f docker-compose.infrastructure.yml down` at the root folder containing all the projects to kill the containers of the infrastructure services for the microservice ecosystem
+4.  Execute `docker-compose -f docker-compose.core.yml down` at the root folder containing all the projects to kill the containers of the core microservices
 
 ---
 ### ARCHITECTURE
@@ -48,8 +62,9 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 
 ---
 ### FEATURES
-1. Search for a car by its VIN and receive the strategic polygon details that it is currently present at
-1. Search for a strategic polygon by its id or name and receive all the cars that it contains
+1. Search for a car by its VIN and get the strategic polygon details that it is currently mapped to
+2. Search for a strategic polygon by its id and get the list of cars that it currently contains
+3. Search for strategic polygons by a name apttern and collect all the cars that each matched strategic polygon contains
 
 ---
 ### PROJECT DESCRIPTION
@@ -95,6 +110,7 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 8. All business specific exceptions are checked exceptions having a custom message and an enum based error code which in turn contains a prdefined application specific error code in the format `SNCC-<INITIALS-OF-SERVICE-NAME>-<INCREMENTING-NUMBER>` and its corresponding HTTP Status code
 8. Each microservice has a REST webservice error handler that catches any business specific exception to translate them into appropriate error messages and HTTP status codes
 9. Sleuth and Zipkin has been added to each of the core microservices for the purpose of tracing distributed requests across multiple microservices
+10. Application specific configuration changes are loaded and propagated downstream in the order as follows: java system variables, bootstrap.properties, application-<PROFILE>.properties in configuration server
 
 ---
 ### REST API DOCUMENTATION
@@ -106,15 +122,14 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 
 ---
 ### ISSUES/ENHANCEMENTS
-1.  Implement custom health indicators
-2.  Enforce strict depends on strategy in docker-compose during container creation using custom service health checks for graceful startup
-3.  Implement circuit breaker
-5.  Implement file system configuration store
-6.  Enable security on all microservices
-7.  Enable authentication of cache and document database
-8.  Encrypt security credentials in configuration store
-9.  Redis should be configured for master-slave where master is write concern and all slaves are read concerns with eventual consistency between them 
+1.  Implement circuit breaker
+2.  Block direct access to all microservices
+3.  Enable security on all microservices
+4.  Enable authentication of redis cache and mongodb database server 
+5.  Encrypt security credentials in configuration store
+6.  Move collection of configuration files for all microservices to an external location on the file system instead of having it embedded
+7.  Redis should be configured for master-slave where master is write concern and all slaves are read concerns with eventual consistency between them 
 
 ---
 ### ADDITIONAL RESOURCES
-In the `scripts` folder under the root folder `sharenow-coding-challenge` you will find the postman collection corresponding to all the REST APIS defined for each microservice in this entire project. You can use it as well if needed.
+1. In the `scripts` folder under the root folder `sharenow-coding-challenge` you will find the postman collection corresponding to all the REST APIS defined for each microservice in this entire project. You can use it as well if needed.

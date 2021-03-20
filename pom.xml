@@ -14,7 +14,7 @@
     <groupId>com.teenthofabud.codingchallenge.sharenow</groupId>
     <artifactId>sharenow-coding-challenge</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-RELEASE</version>
 
     <modules>
         <module>configuration-service</module>

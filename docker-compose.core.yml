@@ -1,0 +1,117 @@
+version: "3.9"
+
+networks:
+  sharenow:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.27.0.0/25
+          gateway: 172.27.0.1
+
+services:
+
+  gateway-service:
+    image: teenthofabud/sharenow-coding-challenge-gateway-service:1.0.0-RELEASE
+    container_name: gateway-service
+    hostname: gateway-service
+    networks:
+      sharenow:
+        ipv4_address: 172.27.0.8
+    environment:
+      - PROFILE=staging
+      - NAMING_SERVICE_URL=http://172.27.0.6:8761
+      - CONFIGURATION_SERVICE_URL=http://172.27.0.7:8888
+    ports:
+      - "8081:8081"
+    restart: on-failure
+
+  polling-service:
+    image: teenthofabud/sharenow-coding-challenge-polling-service:1.0.0-RELEASE
+    container_name: polling-service
+    hostname: polling-service
+    networks:
+      sharenow:
+        ipv4_address: 172.27.0.9
+    environment:
+      - PROFILE=staging
+      - CACHE_SERVICE_HOST=172.27.0.3
+      - CACHE_SERVICE_PORT=6379
+      - CAR2GO_SERVICE_URL=http://172.27.0.4:3000
+      - NAMING_SERVICE_URL=http://172.27.0.6:8761
+      - CONFIGURATION_SERVICE_URL=http://172.27.0.7:8888
+    depends_on:
+      - gateway-service
+    ports:
+      - "16080:16080"
+    restart: on-failure
+
+  car-service:
+    image: teenthofabud/sharenow-coding-challenge-car-service:1.0.0-RELEASE
+    container_name: car-service
+    hostname: car-service
+    networks:
+      sharenow:
+        ipv4_address: 172.27.0.10
+    environment:
+      - PROFILE=staging
+      - CACHE_SERVICE_HOST=172.27.0.3
+      - CACHE_SERVICE_PORT=6379
+      - TRACING_SERVICE_URL=http://172.27.0.5:9411
+      - NAMING_SERVICE_URL=http://172.27.0.6:8761
+      - CONFIGURATION_SERVICE_URL=http://172.27.0.7:8888
+    depends_on:
+      - polling-service
+      - gateway-service
+    links:
+      - polling-service
+      - gateway-service
+    ports:
+      - "17080:17080"
+    restart: on-failure
+
+  polygon-service:
+    image: teenthofabud/sharenow-coding-challenge-polygon-service:1.0.0-RELEASE
+    container_name: polygon-service
+    hostname: polygon-service
+    networks:
+      sharenow:
+        ipv4_address: 172.27.0.11
+    environment:
+      - PROFILE=staging
+      - DOCUMENTDB_SERVICE_HOST=172.27.0.2
+      - DOCUMENTDB_SERVICE_PORT=27017
+      - TRACING_SERVICE_URL=http://172.27.0.5:9411
+      - NAMING_SERVICE_URL=http://172.27.0.6:8761
+      - CONFIGURATION_SERVICE_URL=http://172.27.0.7:8888
+    depends_on:
+      - gateway-service
+    ports:
+      - "18080:18080"
+    restart: on-failure
+
+  position-service:
+    image: teenthofabud/sharenow-coding-challenge-position-service:1.0.0-RELEASE
+    container_name: position-service
+    hostname: position-service
+    networks:
+      sharenow:
+        ipv4_address: 172.27.0.12
+    environment:
+      - PROFILE=staging
+      - TRACING_SERVICE_URL=http://172.27.0.5:9411
+      - NAMING_SERVICE_URL=http://172.27.0.6:8761
+      - CONFIGURATION_SERVICE_URL=http://172.27.0.7:8888
+      - CAR_SERVICE_URL=http://172.27.0.10:17080/car
+      - POLYGON_SERVICE_URL=http://172.27.0.11:18080/polygon
+    depends_on:
+      - car-service
+      - polygon-service
+      - gateway-service
+    links:
+      - car-service
+      - polygon-service
+      - gateway-service
+    ports:
+      - "19080:19080"
+    restart: on-failure

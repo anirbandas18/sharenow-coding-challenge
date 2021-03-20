@@ -15,14 +15,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.*;
 
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class CarServiceTests {
 
@@ -60,7 +60,10 @@ public class CarServiceTests {
 
     @BeforeEach
     private void init() {
+        this.repository = Mockito.mock(CarRepository.class);
+        MockitoAnnotations.initMocks(this);
         this.service.init();
+
     }
 
     @Test
