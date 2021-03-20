@@ -1,4 +1,4 @@
-package com.teenthofabud.codingchallenge.sharenow.polling;
+package com.teenthofabud.codingchallenge.sharenow.polling.configuration;
 
 import org.springframework.stereotype.Component;
 

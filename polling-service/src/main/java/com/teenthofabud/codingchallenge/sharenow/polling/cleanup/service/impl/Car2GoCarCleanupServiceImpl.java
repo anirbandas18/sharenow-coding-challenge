@@ -1,6 +1,6 @@
 package com.teenthofabud.codingchallenge.sharenow.polling.cleanup.service.impl;
 
-import com.teenthofabud.codingchallenge.sharenow.polling.PollingMonitor;
+import com.teenthofabud.codingchallenge.sharenow.polling.configuration.PollingMonitor;
 import com.teenthofabud.codingchallenge.sharenow.polling.cleanup.service.CarCleanupService;
 import com.teenthofabud.codingchallenge.sharenow.polling.cleanup.service.CarStaleness;
 import com.teenthofabud.codingchallenge.sharenow.polling.model.entity.CarEntity;

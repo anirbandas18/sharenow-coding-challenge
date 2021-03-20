@@ -1,7 +1,7 @@
 package com.teenthofabud.codingchallenge.sharenow.polling.refresh.service.impl;
 
 
-import com.teenthofabud.codingchallenge.sharenow.polling.PollingMonitor;
+import com.teenthofabud.codingchallenge.sharenow.polling.configuration.PollingMonitor;
 import com.teenthofabud.codingchallenge.sharenow.polling.model.dto.CarDTO;
 import com.teenthofabud.codingchallenge.sharenow.polling.model.entity.PositionEntity;
 import com.teenthofabud.codingchallenge.sharenow.polling.model.entity.CarEntity;
