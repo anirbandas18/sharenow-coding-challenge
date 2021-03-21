@@ -56,16 +56,30 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 4.  Execute `docker-compose -f docker-compose.core.yml down` at the root folder containing all the projects to kill the containers of the core microservices
 
 ---
-### ARCHITECTURE
-[Click here to see](https://i.ibb.co/R0dzhpT/sharenow-coding-challenge-architecture.png)
-![Click here to see](./scripts/sharenow-coding-challenge-architecture.png)
-
----
 ### FEATURES
 1. Search for a car by its VIN and get the strategic polygon details that it is currently mapped to
 2. Search for a strategic polygon by its id and get the list of cars that it currently contains
 3. Search for strategic polygons by a name apttern and collect all the cars that each matched strategic polygon contains
 4. Error reporting with codes and descriptive messages 
+
+---
+### ARCHITECTURE
+[Click here to see](https://ibb.co/mv9hGyW)
+![Click here to see](data/designs/architecture-sharenow-coding-challenge.png)
+
+---
+### SEQUENCE DIAGRAMS
+[Car to strategic polygon mapping](https://ibb.co/L6NjMjj)
+![Car to strategic polygon mapping](out/data/designs/sequence-get-car-with-enclosing-strategic-polygon/Get car by VIN and its enclosing strategic polygon.png)
+
+
+[Strategic polygon to cars mapping](https://ibb.co/SmCzw4V)
+![Strategic polygon to cars mapping](out/data/designs/sequence-get-strategic-polygon-with-enclosed-cars/Get strategic polygon by its Id and the cars it encloses.png)
+
+
+[Strategic polygons by name to their respective mappings of cars](https://ibb.co/xmHB79B)
+![Strategic polygons by name to their respective mappings of cars](out/data/designs/sequence-get-strategic-polygons-and-their-enclosed-cars/Get strategic polygons with matching name and the cars each of it encloses.png)
+
 
 ---
 ### PROJECT DESCRIPTION
@@ -115,6 +129,7 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 11. All services have been assigned static IPs when running as docker containers where the subnet has a capacity of accommodating 2^25 -1 machines for scalability
 12. The algorithm to place cars within strategic polygons by matching the name of strategic polygons, has a time complexity of O(nm) where m is the number of cars and n is the number of strategic polygons
 13. The algorithm to check whether a point lies within or exactly on the boundary of a strategic polygon , has a time complexity of O(n) where n is the number of vertices in the strategic polygon
+14. Configuration store for all services in configuration-service is chosen as embedded because of non public git restriction
 
 ---
 ### REST API DOCUMENTATION
@@ -126,14 +141,13 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 
 ---
 ### ISSUES/ENHANCEMENTS
-1.  Implement circuit breaker
-2.  Block direct access to all microservices
-3.  Enable security on all microservices
+1.  Implement circuit breaker for service resilience in conjunction with client side load balancing
+2.  Block direct access to all microservices, except through gateway
+3.  Enable security on all infrastructure services and core microservices
 4.  Enable authentication of redis cache and mongodb database server 
 5.  Encrypt security credentials in configuration store
-6.  Move collection of configuration files for all microservices to an external location on the file system instead of having it embedded
-7.  Redis should be configured for master-slave where master is write concern and all slaves are read concerns with eventual consistency between them 
-8.  The algorithm to place cars within strategic polygons by matching the name of strategic polygons, has a time complexity of O(nm) which should be reduced for better performance
+6.  Redis should be configured for master-slave where master is write concern and all slaves are read concerns with eventual consistency between them 
+7.  Synchronize bootstrap of infrastructure and core services of this project in docker-compose
 
 ---
 ### ADDITIONAL RESOURCES

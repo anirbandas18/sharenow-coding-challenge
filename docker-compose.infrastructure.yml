@@ -9,6 +9,9 @@ networks:
         - subnet: 172.27.0.0/25
           gateway: 172.27.0.1
 
+volumes:
+  mongodb:
+
 services:
 
   cache-service:
@@ -26,7 +29,7 @@ services:
     container_name: documentdb-service
     hostname: documentdb-service
     volumes:
-      - "/data/db:/opt/sharenow-coding-challenge-data/mongodb"
+      - ./data/mongodb:/data/db
     ports:
       - "27017:27017"
     networks:
@@ -69,9 +72,11 @@ services:
     hostname: configuration-service
     ports:
       - "8888:8888"
+    volumes:
+      - ./data/configuration-store:/opt/sharenow-coding-challenge/configuration-store
     networks:
       sharenow:
         ipv4_address: 172.27.0.7
     environment:
-      - PROJECT_BASE_DIR=./scripts/configuration-store
+      - PROJECT_BASE_DIR=/opt/sharenow-coding-challenge/configuration-store
     restart: on-failure
