@@ -112,6 +112,9 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 8. Each microservice has a REST webservice error handler that catches any business specific exception to translate them into appropriate error messages and HTTP status codes
 9. Sleuth and Zipkin has been added to each of the core microservices for the purpose of tracing distributed requests across multiple microservices
 10. Application specific configuration changes are loaded and propagated downstream in the order as follows: java system variables, bootstrap.properties, application-<PROFILE>.properties in configuration server
+11. All services have been assigned static IPs when running as docker containers where the subnet has a capacity of accommodating 2^25 -1 machines for scalability
+12. The algorithm to place cars within strategic polygons by matching the name of strategic polygons, has a time complexity of O(nm) where m is the number of cars and n is the number of strategic polygons
+13. The algorithm to check whether a point lies within or exactly on the boundary of a strategic polygon , has a time complexity of O(n) where n is the number of vertices in the strategic polygon
 
 ---
 ### REST API DOCUMENTATION
@@ -130,7 +133,7 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 5.  Encrypt security credentials in configuration store
 6.  Move collection of configuration files for all microservices to an external location on the file system instead of having it embedded
 7.  Redis should be configured for master-slave where master is write concern and all slaves are read concerns with eventual consistency between them 
-8.  The algorithm to place cars within strategic polygons by matching the name of startegic polygons, has a time complexity of O(n^2) which should be reduced for better performance
+8.  The algorithm to place cars within strategic polygons by matching the name of strategic polygons, has a time complexity of O(nm) which should be reduced for better performance
 
 ---
 ### ADDITIONAL RESOURCES
