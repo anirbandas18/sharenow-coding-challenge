@@ -65,6 +65,7 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 1. Search for a car by its VIN and get the strategic polygon details that it is currently mapped to
 2. Search for a strategic polygon by its id and get the list of cars that it currently contains
 3. Search for strategic polygons by a name apttern and collect all the cars that each matched strategic polygon contains
+4. Error reporting with codes and descriptive messages 
 
 ---
 ### PROJECT DESCRIPTION
@@ -129,6 +130,7 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 5.  Encrypt security credentials in configuration store
 6.  Move collection of configuration files for all microservices to an external location on the file system instead of having it embedded
 7.  Redis should be configured for master-slave where master is write concern and all slaves are read concerns with eventual consistency between them 
+8.  The algorithm to place cars within strategic polygons by matching the name of startegic polygons, has a time complexity of O(n^2) which should be reduced for better performance
 
 ---
 ### ADDITIONAL RESOURCES
