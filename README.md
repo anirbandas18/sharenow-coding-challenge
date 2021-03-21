@@ -151,4 +151,4 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 
 ---
 ### ADDITIONAL RESOURCES
-1. In the `scripts` folder under the root folder `sharenow-coding-challenge` you will find the postman collection corresponding to all the REST APIS defined for each microservice in this entire project. You can use it as well if needed.
+1. In the `scripts` folder under the root folder `sharenow-coding-challenge` you will find the postman collection corresponding to all the REST APIS defined for each microservice in this entire project and the environment settings as well for the REST APIs. You can use it as well if needed. If you are using the environment settings for postman, update the value of `virtual-host` variable to the IP of the host system where all the docker containers for this project are running
