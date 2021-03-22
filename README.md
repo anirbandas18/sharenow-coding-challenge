@@ -56,6 +56,10 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 4.  Execute `docker-compose -f docker-compose.core.yml down` at the root folder containing all the projects to kill the containers of the core microservices
 
 ---
+### INSTALLATION VIDEO
+[Click here to see](https://vimeo.com/527056232)
+
+---
 ### FEATURES
 1. Search for a car by its VIN and get the strategic polygon details that it is currently mapped to
 2. Search for a strategic polygon by its id and get the list of cars that it currently contains
@@ -152,3 +156,9 @@ I had a lot of fun in completing this challenge because of the wide variety of t
 ---
 ### ADDITIONAL RESOURCES
 1. In the `scripts` folder under the root folder `sharenow-coding-challenge` you will find the postman collection corresponding to all the REST APIS defined for each microservice in this entire project and the environment settings as well for the REST APIs. You can use it as well if needed. If you are using the environment settings for postman, update the value of `virtual-host` variable to the IP of the host system where all the docker containers for this project are running
+
+---
+### TROUBLESHOOTING
+1. If you are facing docker network issues while running the docker compose files, execute `docker system prune` to reset the networks
+2. The docker image builds that take place via maven can create additional images that take up space in your file system but are not tagged with any name or tag because when you run `docker images` you will see there are images with <none> as image name and image tag. Use `docker rmi <list of image ids>` to clear such orphan images
+3. If you are facing issues in bring up mongodb docker container (documentdb-service) due to a permission error where /adata/db is locked within the container, change the host value of volume option under documentdb-service in docker-compose.infrastructure.yml file to an absolute path where you knwo that the system user you are currently logged in as, has permission ot read or write

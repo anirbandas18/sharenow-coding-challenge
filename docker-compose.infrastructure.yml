@@ -29,7 +29,7 @@ services:
     container_name: documentdb-service
     hostname: documentdb-service
     volumes:
-      - ./data/mongodb:/data/db
+      - /opt/sharenow-coding-challenge/mongodb/data/db:/data/db
     ports:
       - "27017:27017"
     networks:
