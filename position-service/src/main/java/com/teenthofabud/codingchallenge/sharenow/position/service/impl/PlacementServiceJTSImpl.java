@@ -36,14 +36,18 @@ public class PlacementServiceJTSImpl implements PlacementService {
                 if (coordinates != null && coordinates.size() < 3) {
                     throw new PositionServiceException("Invalid polygon", PositionErrorCode.UNEXPECTED_PARAMETER, new Object[] {"polygon vertex count < 3"});
                 } else {
-                    List<Coordinate> polygonPointsList = polygonDTO.getGeometry().getExteriorRing().stream()
-                            .map(lla -> new Coordinate(lla.getLongitude(), lla.getLatitude())).collect(Collectors.toList());
-                    polygonPointsList.add(polygonPointsList.get(0)); // sanitizing polygon coordinates as per GeoJSOn specifications
-                    Coordinate[] polygonPointsArray = polygonPointsList.toArray(new Coordinate[polygonPointsList.size()]);
-                    Polygon strategicPolygon = geometryFactory.createPolygon(polygonPointsArray);
-                    Coordinate carCoordinates = new Coordinate(carDTO.getPosition().getLongitude(), carDTO.getPosition().getLatitude());
-                    Point carLocation = geometryFactory.createPoint(carCoordinates);
-                    return strategicPolygon.contains(carLocation) || strategicPolygon.getBoundary().contains(carLocation);
+                    if(carDTO.getPosition() != null) {
+                        Coordinate carCoordinates = new Coordinate(carDTO.getPosition().getLongitude(), carDTO.getPosition().getLatitude());
+                        List<Coordinate> polygonPointsList = polygonDTO.getGeometry().getExteriorRing().stream()
+                                .map(lla -> new Coordinate(lla.getLongitude(), lla.getLatitude())).collect(Collectors.toList());
+                        polygonPointsList.add(polygonPointsList.get(0)); // sanitizing polygon coordinates as per GeoJSOn specifications
+                        Coordinate[] polygonPointsArray = polygonPointsList.toArray(new Coordinate[polygonPointsList.size()]);
+                        Polygon strategicPolygon = geometryFactory.createPolygon(polygonPointsArray);
+                        Point carLocation = geometryFactory.createPoint(carCoordinates);
+                        return strategicPolygon.contains(carLocation) || strategicPolygon.getBoundary().contains(carLocation);
+                    } else {
+                        throw new PositionServiceException("Invalid car position", PositionErrorCode.UNEXPECTED_PARAMETER, new Object[] {"car position is not provided"});
+                    }
                 }
             } else {
                 throw new PositionServiceException("Invalid polygon", PositionErrorCode.INVALID_PARAMETER, new Object[] {"polygon coordinates"});

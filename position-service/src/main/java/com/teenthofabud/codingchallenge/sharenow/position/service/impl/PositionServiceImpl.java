@@ -1,6 +1,5 @@
 package com.teenthofabud.codingchallenge.sharenow.position.service.impl;
 
-import com.ctc.wstx.sw.EncodingXmlWriter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.car.CarDetailsDTO;
@@ -9,11 +8,13 @@ import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.GeoF
 import com.teenthofabud.codingchallenge.sharenow.position.model.dto.polygon.StrategicPolygonDetailedDTO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.error.PositionErrorCode;
 import com.teenthofabud.codingchallenge.sharenow.position.model.error.PositionServiceException;
-import com.teenthofabud.codingchallenge.sharenow.position.model.vo.*;
+import com.teenthofabud.codingchallenge.sharenow.position.model.vo.ErrorVO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.vo.car.Car2StrategicPolygonPositioningVO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.vo.car.CarMappedVO;
 import com.teenthofabud.codingchallenge.sharenow.position.model.vo.car.PositionVO;
-import com.teenthofabud.codingchallenge.sharenow.position.model.vo.polygon.*;
+import com.teenthofabud.codingchallenge.sharenow.position.model.vo.polygon.GeoFeatureVO;
+import com.teenthofabud.codingchallenge.sharenow.position.model.vo.polygon.StrategicPolygon2CarPositioningVO;
+import com.teenthofabud.codingchallenge.sharenow.position.model.vo.polygon.StrategicPolygonMappedVO;
 import com.teenthofabud.codingchallenge.sharenow.position.repository.CarServiceClient;
 import com.teenthofabud.codingchallenge.sharenow.position.repository.PolygonServiceClient;
 import com.teenthofabud.codingchallenge.sharenow.position.service.PlacementService;
@@ -22,6 +23,8 @@ import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -45,6 +48,13 @@ public class PositionServiceImpl implements PositionService {
     @Autowired
     private PolygonServiceClient polygonClient;
 
+    @Autowired
+    private CircuitBreakerFactory globalCircuitBreakerFactory;
+
+    private CircuitBreaker carServiceCircuitBreaker;
+
+    private CircuitBreaker polygonServiceCircuitBreaker;
+
     private Converter<CarDetailsDTO, CarMappedVO> carDetailsDTO2VOConverter;
 
     private Converter<StrategicPolygonDetailedDTO, StrategicPolygonMappedVO> polygonDetailsDTO2VOConverter;
@@ -55,6 +65,8 @@ public class PositionServiceImpl implements PositionService {
 
     @PostConstruct
     public void init() {
+        this.carServiceCircuitBreaker = globalCircuitBreakerFactory.create("car");
+        this.polygonServiceCircuitBreaker = globalCircuitBreakerFactory.create("polygon");
         this.positionDTO2VOConverter = (dto) -> {
             PositionVO vo = new PositionVO();
             vo.setLatitude(dto.getLatitude());
@@ -108,14 +120,42 @@ public class PositionServiceImpl implements PositionService {
         return new PositionServiceException(e.getMessage(), PositionErrorCode.SYSTEM_ERROR, new Object[] {response});
     }
 
+    private CarDetailsDTO getDefaultCarDetailsByVin(String vin) {
+        CarDetailsDTO carDetailsDTO = new CarDetailsDTO();
+        carDetailsDTO.setVin(vin);
+        return null;
+    }
+
+    private List<CarDetailsDTO> getDefaultCarDetailsList() {
+        return new ArrayList<CarDetailsDTO>();
+    }
+
+    private List<StrategicPolygonDetailedDTO> getDefaultStrategicPolygons() {
+        return new ArrayList<StrategicPolygonDetailedDTO>();
+    }
+
+    private StrategicPolygonDetailedDTO getDefaultStrategicPolygonDetailsById(String polygonId) {
+        StrategicPolygonDetailedDTO dto = new StrategicPolygonDetailedDTO();
+        dto.setId(polygonId);
+        return dto;
+    }
+
+    private List<StrategicPolygonDetailedDTO> getDefaultStrategicPolygonsAndTheirDetailsByName(String name) {
+        StrategicPolygonDetailedDTO dto = new StrategicPolygonDetailedDTO();
+        dto.setName(name);
+        return Arrays.asList(dto);
+    }
+
     @Override
     public Car2StrategicPolygonPositioningVO retrievePositionOfCarAndItsEnclosingPolygonByVin(String vin) throws PositionServiceException {
         try {
             Car2StrategicPolygonPositioningVO posVO = new Car2StrategicPolygonPositioningVO();
             boolean found = false;
-            CarDetailsDTO carDetailsDTO = this.carClient.getCarDetailsByVin(vin);
+            CarDetailsDTO carDetailsDTO = this.carServiceCircuitBreaker.run(() -> this.carClient.getCarDetailsByVin(vin),
+                    throwable -> this.getDefaultCarDetailsByVin(vin));
             LOGGER.info("Retrieved car details for vin: {}", vin);
-            List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonClient.getAllPolygons();
+            List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonServiceCircuitBreaker.run(() -> this.polygonClient.getAllPolygons(),
+                    throwable -> this.getDefaultStrategicPolygons());
             if(polygonDTOList != null && !polygonDTOList.isEmpty()) {
                 LOGGER.info("Retrieved strategic polygons: {}", polygonDTOList.size());
                 for(StrategicPolygonDetailedDTO detailedPolygonDTO : polygonDTOList) {
@@ -147,9 +187,13 @@ public class PositionServiceImpl implements PositionService {
     public StrategicPolygon2CarPositioningVO retrievePositionsOfAllCarsWithinPolygonByPolygonId(String polygonId) throws PositionServiceException {
         try {
             StrategicPolygon2CarPositioningVO posVO = new StrategicPolygon2CarPositioningVO();
-            StrategicPolygonDetailedDTO polygonDTO = this.polygonClient.getPolygonDetailsById(polygonId);
+            //StrategicPolygonDetailedDTO polygonDTO = this.polygonClient.getPolygonDetailsById(polygonId);
+            StrategicPolygonDetailedDTO polygonDTO = this.polygonServiceCircuitBreaker.run(() -> this.polygonClient.getPolygonDetailsById(polygonId),
+                    throwable -> this.getDefaultStrategicPolygonDetailsById(polygonId));
             LOGGER.info("Retrieved strategic polygon details for id: {}", polygonId);
-            List<CarDetailsDTO> carDetailsDTOList = this.carClient.getAllCarsWithDetails();
+            //List<CarDetailsDTO> carDetailsDTOList = this.carClient.getAllCarsWithDetails();
+            List<CarDetailsDTO> carDetailsDTOList = this.carServiceCircuitBreaker.run(() -> this.carClient.getAllCarsWithDetails(),
+                    throwable -> this.getDefaultCarDetailsList());
             if(carDetailsDTOList != null && !carDetailsDTOList.isEmpty()) {
                 LOGGER.info("Retrieved cars: {}", carDetailsDTOList.size());
                 for(CarDetailsDTO carDetailsDTO : carDetailsDTOList) {
@@ -179,9 +223,13 @@ public class PositionServiceImpl implements PositionService {
     public Set<StrategicPolygon2CarPositioningVO> retrievePositionsOfAllCarsWithinPolygonByPolygonName(String name) throws PositionServiceException {
         Set<StrategicPolygon2CarPositioningVO> posVOList = new TreeSet<>();
         try {
-            List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonClient.getAllPolygonsByName(name);
+            //List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonClient.getAllPolygonsByName(name);
+            List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonServiceCircuitBreaker.run(() -> this.polygonClient.getAllPolygonsByName(name),
+                    throwable -> this.getDefaultStrategicPolygonsAndTheirDetailsByName(name));
             LOGGER.info("Retrieved strategic polygon details for name: {}", name);
-            List<CarDetailsDTO> carDetailsDTOList = this.carClient.getAllCarsWithDetails();
+            //List<CarDetailsDTO> carDetailsDTOList = this.carClient.getAllCarsWithDetails();
+            List<CarDetailsDTO> carDetailsDTOList = this.carServiceCircuitBreaker.run(() -> this.carClient.getAllCarsWithDetails(),
+                    throwable -> this.getDefaultCarDetailsList());
             if((carDetailsDTOList != null && !carDetailsDTOList.isEmpty()) &&
                     (polygonDTOList != null && !polygonDTOList.isEmpty())){
                 LOGGER.info("Retrieved cars: {}", carDetailsDTOList.size());
@@ -190,7 +238,7 @@ public class PositionServiceImpl implements PositionService {
                     StrategicPolygon2CarPositioningVO posVO = new StrategicPolygon2CarPositioningVO();
                     List<CarDetailsDTO> auxCarDetailsDTOList = new ArrayList<>();
                     for(CarDetailsDTO carDetailsDTO : carDetailsDTOList) {
-                        if(this.placementService.isCarInsidePolygon(carDetailsDTO, polygonDetailedDTO)) {
+                        if (this.placementService.isCarInsidePolygon(carDetailsDTO, polygonDetailedDTO)) {
                             CarMappedVO carVO = this.carDetailsDTO2VOConverter.convert(carDetailsDTO);
                             posVO.addCar(carVO);
                             atleast1CarFound = true;

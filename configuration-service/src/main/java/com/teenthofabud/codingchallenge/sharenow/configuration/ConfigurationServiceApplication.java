@@ -9,15 +9,16 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 @EnableConfigServer
 public class ConfigurationServiceApplication {
 
+    private static String FP;
+
     @Value("${spring.cloud.config.server.native.search-locations}")
-    public void setBaseLocation(String baseLocation) {
-        BL = baseLocation;
+    public void setFP(String filePath) {
+        FP = filePath;
     }
-    static String BL;
 
     public static void main(String[] args) {
         SpringApplication.run(ConfigurationServiceApplication.class, args);
-        System.out.println(BL);
+        System.out.println(FP);
     }
 
 }
