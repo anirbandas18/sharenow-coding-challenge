@@ -120,42 +120,16 @@ public class PositionServiceImpl implements PositionService {
         return new PositionServiceException(e.getMessage(), PositionErrorCode.SYSTEM_ERROR, new Object[] {response});
     }
 
-    private CarDetailsDTO getDefaultCarDetailsByVin(String vin) {
-        CarDetailsDTO carDetailsDTO = new CarDetailsDTO();
-        carDetailsDTO.setVin(vin);
-        return null;
-    }
-
-    private List<CarDetailsDTO> getDefaultCarDetailsList() {
-        return new ArrayList<CarDetailsDTO>();
-    }
-
-    private List<StrategicPolygonDetailedDTO> getDefaultStrategicPolygons() {
-        return new ArrayList<StrategicPolygonDetailedDTO>();
-    }
-
-    private StrategicPolygonDetailedDTO getDefaultStrategicPolygonDetailsById(String polygonId) {
-        StrategicPolygonDetailedDTO dto = new StrategicPolygonDetailedDTO();
-        dto.setId(polygonId);
-        return dto;
-    }
-
-    private List<StrategicPolygonDetailedDTO> getDefaultStrategicPolygonsAndTheirDetailsByName(String name) {
-        StrategicPolygonDetailedDTO dto = new StrategicPolygonDetailedDTO();
-        dto.setName(name);
-        return Arrays.asList(dto);
-    }
-
     @Override
     public Car2StrategicPolygonPositioningVO retrievePositionOfCarAndItsEnclosingPolygonByVin(String vin) throws PositionServiceException {
         try {
             Car2StrategicPolygonPositioningVO posVO = new Car2StrategicPolygonPositioningVO();
             boolean found = false;
             CarDetailsDTO carDetailsDTO = this.carServiceCircuitBreaker.run(() -> this.carClient.getCarDetailsByVin(vin),
-                    throwable -> this.getDefaultCarDetailsByVin(vin));
+                    throwable -> CarServiceClient.getDefaultCarDetailsByVin(vin));
             LOGGER.info("Retrieved car details for vin: {}", vin);
             List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonServiceCircuitBreaker.run(() -> this.polygonClient.getAllPolygons(),
-                    throwable -> this.getDefaultStrategicPolygons());
+                    throwable -> PolygonServiceClient.getDefaultStrategicPolygons());
             if(polygonDTOList != null && !polygonDTOList.isEmpty()) {
                 LOGGER.info("Retrieved strategic polygons: {}", polygonDTOList.size());
                 for(StrategicPolygonDetailedDTO detailedPolygonDTO : polygonDTOList) {
@@ -187,13 +161,11 @@ public class PositionServiceImpl implements PositionService {
     public StrategicPolygon2CarPositioningVO retrievePositionsOfAllCarsWithinPolygonByPolygonId(String polygonId) throws PositionServiceException {
         try {
             StrategicPolygon2CarPositioningVO posVO = new StrategicPolygon2CarPositioningVO();
-            //StrategicPolygonDetailedDTO polygonDTO = this.polygonClient.getPolygonDetailsById(polygonId);
             StrategicPolygonDetailedDTO polygonDTO = this.polygonServiceCircuitBreaker.run(() -> this.polygonClient.getPolygonDetailsById(polygonId),
-                    throwable -> this.getDefaultStrategicPolygonDetailsById(polygonId));
+                    throwable -> PolygonServiceClient.getDefaultStrategicPolygonDetailsById(polygonId));
             LOGGER.info("Retrieved strategic polygon details for id: {}", polygonId);
-            //List<CarDetailsDTO> carDetailsDTOList = this.carClient.getAllCarsWithDetails();
             List<CarDetailsDTO> carDetailsDTOList = this.carServiceCircuitBreaker.run(() -> this.carClient.getAllCarsWithDetails(),
-                    throwable -> this.getDefaultCarDetailsList());
+                    throwable -> CarServiceClient.getDefaultCarDetailsList());
             if(carDetailsDTOList != null && !carDetailsDTOList.isEmpty()) {
                 LOGGER.info("Retrieved cars: {}", carDetailsDTOList.size());
                 for(CarDetailsDTO carDetailsDTO : carDetailsDTOList) {
@@ -223,13 +195,11 @@ public class PositionServiceImpl implements PositionService {
     public Set<StrategicPolygon2CarPositioningVO> retrievePositionsOfAllCarsWithinPolygonByPolygonName(String name) throws PositionServiceException {
         Set<StrategicPolygon2CarPositioningVO> posVOList = new TreeSet<>();
         try {
-            //List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonClient.getAllPolygonsByName(name);
             List<StrategicPolygonDetailedDTO> polygonDTOList = this.polygonServiceCircuitBreaker.run(() -> this.polygonClient.getAllPolygonsByName(name),
-                    throwable -> this.getDefaultStrategicPolygonsAndTheirDetailsByName(name));
+                    throwable -> PolygonServiceClient.getDefaultStrategicPolygonsAndTheirDetailsByName(name));
             LOGGER.info("Retrieved strategic polygon details for name: {}", name);
-            //List<CarDetailsDTO> carDetailsDTOList = this.carClient.getAllCarsWithDetails();
             List<CarDetailsDTO> carDetailsDTOList = this.carServiceCircuitBreaker.run(() -> this.carClient.getAllCarsWithDetails(),
-                    throwable -> this.getDefaultCarDetailsList());
+                    throwable -> CarServiceClient.getDefaultCarDetailsList());
             if((carDetailsDTOList != null && !carDetailsDTOList.isEmpty()) &&
                     (polygonDTOList != null && !polygonDTOList.isEmpty())){
                 LOGGER.info("Retrieved cars: {}", carDetailsDTOList.size());

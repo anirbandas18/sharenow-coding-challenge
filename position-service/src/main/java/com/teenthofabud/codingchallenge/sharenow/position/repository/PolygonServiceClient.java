@@ -5,6 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -19,5 +21,21 @@ public interface PolygonServiceClient {
 
     @GetMapping("/search/id/{id}")
     public StrategicPolygonDetailedDTO getPolygonDetailsById(@PathVariable String id);
+
+    static List<StrategicPolygonDetailedDTO> getDefaultStrategicPolygons() {
+        return new ArrayList<StrategicPolygonDetailedDTO>();
+    }
+
+    static StrategicPolygonDetailedDTO getDefaultStrategicPolygonDetailsById(String polygonId) {
+        StrategicPolygonDetailedDTO dto = new StrategicPolygonDetailedDTO();
+        dto.setId(polygonId);
+        return dto;
+    }
+
+    static List<StrategicPolygonDetailedDTO> getDefaultStrategicPolygonsAndTheirDetailsByName(String name) {
+        StrategicPolygonDetailedDTO dto = new StrategicPolygonDetailedDTO();
+        dto.setName(name);
+        return Arrays.asList(dto);
+    }
 
 }
